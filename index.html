@@ -33,12 +33,18 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 12px);scroll-padding-bottom:calc(env(safe-area-inset-bottom,0px) + 12px)}
 body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.45 var(--body);
   padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px)}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
+
+/* iPhone pri appkách na ploche rozmazáva všetko, čo je pod horným pruhom (hodiny, batéria).
+   Plný pás v tejto oblasti zabezpečí, že sa pod pruh nikdy nedostane text ani výsledok. */
+.safe-cover{position:fixed;left:0;right:0;z-index:50;pointer-events:none}
+.safe-cover.top{top:0;height:env(safe-area-inset-top,0px);background:var(--green)}
+.safe-cover.bottom{bottom:0;height:env(safe-area-inset-bottom,0px);background:var(--paper)}
 
 /* Markíza — jediný výrazný prvok */
 .awning{
@@ -129,6 +135,23 @@ ol.results{list-style:none;margin:0;padding:0}
 .price .pper{display:block;font-size:11px;color:var(--muted)}
 .price .unk{display:block;font-size:11px;color:var(--muted)}
 .place h3{font:700 19px/1.2 var(--display);margin:0 0 4px}
+.name-btn{all:unset;cursor:pointer;display:inline;font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+.name-btn:focus-visible{outline:3px solid var(--mustard);outline-offset:2px;border-radius:4px}
+.chev{display:inline-block;width:8px;height:8px;margin-left:8px;border-right:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);
+  transform:translateY(-4px) rotate(45deg);transition:transform .15s}
+.name-btn[aria-expanded="true"] .chev{transform:translateY(-1px) rotate(-135deg)}
+.more-info{margin-top:10px;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-size:15px}
+.more-info .desc{margin:0}
+.contact{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.contact .btn{color:var(--ink);display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;max-width:100%}
+.contact .sub{font-size:12px;font-weight:500;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+.more-info .desc.none{color:var(--muted);font-size:14px}
+.more-info .hours{margin:10px 0 0}
+.more-info .week{margin-top:6px;font-size:14px}
+.more-info .week summary{color:var(--muted);cursor:pointer}
+.more-info .week ul{margin:6px 0 0;padding-left:18px}
+.more-info .week li.today{font-weight:700}
+@media (prefers-reduced-motion: reduce){.chev{transition:none}}
 .meta{margin:0;font-size:15px}
 .addr{margin:2px 0 0;font-size:14px;color:var(--muted)}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
@@ -146,7 +169,7 @@ ol.results{list-style:none;margin:0;padding:0}
 footer{margin-top:28px;font-size:13px;color:var(--muted)}
 footer p{margin:4px 0}
 
-.cmpbar{position:fixed;left:0;right:0;bottom:0;background:var(--green);color:#fff;
+.cmpbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--green);color:#fff;
   padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;align-items:center;justify-content:center}
 .cmpbar .btn{background:#fff;color:var(--green);border-color:#fff}
 .cmpbar .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
@@ -175,6 +198,8 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
 </style>
 </head>
 <body>
+<div class="safe-cover top" aria-hidden="true"></div>
+<div class="safe-cover bottom" aria-hidden="true"></div>
 <div class="awning" aria-hidden="true"></div>
 <div class="wrap">
   <div class="titlebar">
@@ -298,7 +323,10 @@ const ENDPOINT = "https://places.googleapis.com/v1/places:searchText";
 const BASE_FIELDS = ["places.id","places.displayName","places.formattedAddress","places.location",
   "places.rating","places.userRatingCount","places.priceLevel","places.paymentOptions",
   "places.googleMapsUri","places.businessStatus"];
-let OPTIONAL_FIELDS = ["places.priceRange","places.primaryTypeDisplayName","places.currentOpeningHours"];
+// editorialSummary patrí do rovnakej cenovej úrovne Google ako paymentOptions, ktoré appka už načítava,
+// takže vyhľadávanie nestojí nič navyše.
+let OPTIONAL_FIELDS = ["places.priceRange","places.primaryTypeDisplayName","places.currentOpeningHours","places.editorialSummary",
+  "places.nationalPhoneNumber","places.internationalPhoneNumber","places.websiteUri"];
 
 const GROUPS = [
   {id:"kuchyna", label:"Kuchyňa", items:[
@@ -516,6 +544,28 @@ function priceBlock(p){
   }
   return html + `</div>`;
 }
+function moreInfo(p){
+  const d = p.editorialSummary?.text;
+  let html = d ? `<p class="desc">${esc(d)}</p>`
+               : `<p class="desc none">Google k tomuto podniku nemá krátky popis. Recenzie a fotky nájdeš cez V Mapách.</p>`;
+  const tel = p.internationalPhoneNumber || p.nationalPhoneNumber;
+  const web = p.websiteUri && /^https?:\/\//i.test(p.websiteUri) ? p.websiteUri : null;
+  if (tel || web){
+    html += `<div class="contact">
+      ${tel ? `<a class="btn" href="tel:${esc(tel.replace(/[^\d+]/g, ""))}">Zavolať<span class="sub">${esc(p.nationalPhoneNumber || tel)}</span></a>` : ""}
+      ${web ? `<a class="btn" href="${esc(web)}" target="_blank" rel="noopener">Web podniku<span class="sub">${esc(web.replace(/^https?:\/\/(www\.)?/i, "").replace(/\/.*$/, ""))}</span></a>` : ""}
+    </div>`;
+  }
+  const days = p.currentOpeningHours?.weekdayDescriptions;
+  if (days && days.length === 7){
+    const idx = (new Date().getDay() + 6) % 7; // Google začína pondelkom
+    const today = days[idx].replace(/^[^:]+:\s*/, "");
+    html += `<p class="hours"><strong>Dnes:</strong> ${esc(today)}</p>
+      <details class="week"><summary>Hodiny na celý týždeň</summary>
+      <ul>${days.map((t,i) => `<li${i === idx ? ' class="today"' : ""}>${esc(t)}</li>`).join("")}</ul></details>`;
+  }
+  return html;
+}
 function payOf(p){
   const o = p.paymentOptions;
   if (!o) return "unknown";
@@ -551,6 +601,7 @@ function openMaps(url){
 let results = [], nextToken = null, lastBody = null, lastBrand = null, center = null, searching = false;
 const cache = new Map();
 const compare = new Set();
+const expanded = new Set();
 
 /* ---------- UI: ovládacie prvky ---------- */
 function chip(label, pressed, onClick){
@@ -691,13 +742,14 @@ function renderResults(){
         ${r ? `<span class="cnt">${nf0.format(p.userRatingCount||0)} hodn.</span>` : ""}
         ${priceBlock(p)}</div>
       <div>
-        <h3>${esc(p.displayName?.text)}</h3>
+        <h3><button type="button" class="name-btn" data-toggle="${esc(p.id)}" aria-expanded="${expanded.has(p.id)}">${esc(p.displayName?.text)}<span class="chev" aria-hidden="true"></span></button></h3>
         ${metaParts.length ? `<p class="meta">${esc(metaParts.join(", "))}</p>` : ""}
         <p class="addr">${esc(p.formattedAddress)}</p>
         <div class="tags">${payTag(p)}
           ${open === true ? `<span class="tag ok">Teraz otvorené</span>` : open === false ? `<span class="tag">Teraz zatvorené</span>` : ""}
           ${p.businessStatus === "CLOSED_TEMPORARILY" ? `<span class="tag warn">Dočasne zatvorené</span>` : ""}
         </div>
+        <div class="more-info" id="info-${esc(p.id)}" ${expanded.has(p.id) ? "" : "hidden"}>${moreInfo(p)}</div>
         <div class="actions">
           <button type="button" class="btn primary" data-nav="${esc(p.id)}">Navigovať</button>
           <button type="button" class="btn" data-detail="${esc(p.id)}">V Mapách</button>
@@ -715,6 +767,14 @@ $("#results").addEventListener("click", e => {
   const nav = e.target.closest("[data-nav]"), det = e.target.closest("[data-detail]");
   if (nav){ const p = findPlace(nav.dataset.nav); if (p) openMaps(navUrl(p)); }
   if (det){ const p = findPlace(det.dataset.detail); if (p) openMaps(detailUrl(p)); }
+  const tg = e.target.closest("[data-toggle]");
+  if (tg){
+    const id = tg.dataset.toggle, box = document.getElementById("info-" + id);
+    const open = !expanded.has(id);
+    open ? expanded.add(id) : expanded.delete(id);
+    if (box) box.hidden = !open;
+    tg.setAttribute("aria-expanded", String(open));
+  }
 });
 $("#results").addEventListener("change", e => {
   const cb = e.target.closest("[data-cmp]"); if (!cb) return;
@@ -874,7 +934,7 @@ async function search(more = false){
     places.forEach(p => { if (p.location) p._dist = haversine(center, p.location); });
     places = places.filter(p => p._dist == null || p._dist <= prefs.radius * 1.05);
   }
-  if (!more){ results = []; compare.clear(); lastBody = body; lastBrand = sel?.brand || null; }
+  if (!more){ results = []; compare.clear(); expanded.clear(); lastBody = body; lastBrand = sel?.brand || null; }
   const seen = new Set(results.map(p => p.id));
   for (const p of places) if (!seen.has(p.id)) results.push(p);
   nextToken = data.nextPageToken || null;

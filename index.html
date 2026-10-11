@@ -66,8 +66,31 @@ button{cursor:pointer}
 .wrap{max-width:640px;margin:0 auto;padding:0 18px;
   padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
 .titlebar{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:14px 0 18px}
-h1{font:800 clamp(34px,10vw,46px)/0.95 var(--display);letter-spacing:-0.02em;margin:0;color:var(--green)}
+h1{font:800 clamp(28px,8.4vw,46px)/0.95 var(--display);letter-spacing:-0.02em;margin:0;color:var(--green)}
 @media (prefers-color-scheme: dark){h1{color:var(--ink)}}
+.title-actions{display:flex;gap:8px;flex:none}
+.fav-head{position:relative}
+.fav-head svg{fill:none;stroke:currentColor;stroke-width:2}
+.fav-head.has svg{fill:var(--mustard);stroke:var(--mustard)}
+.fav-count{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;
+  background:var(--mustard);color:var(--mustard-ink);font:700 12px/20px var(--body);text-align:center}
+.btn.fav{display:inline-grid;place-items:center;width:42px;padding:0;height:40px}
+.btn.fav svg{width:20px;height:20px;fill:none;stroke:var(--muted);stroke-width:2}
+.btn.fav[aria-pressed="true"] svg{fill:var(--mustard);stroke:var(--mustard)}
+.fav-list{list-style:none;margin:8px 0 0;padding:0}
+.fav-list li{padding:12px 0;border-bottom:1px solid var(--line)}
+.fav-list .fname{font:700 17px/1.25 var(--display);overflow-wrap:anywhere}
+.fav-list .faddr{font-size:14px;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
+.fav-list .row{margin-top:8px}
+.fav-empty{color:var(--muted)}
+.fav-list .fname{display:block;text-align:left}
+.fav-detail{margin-top:10px}
+.fav-detail .note.err{color:var(--tomato)}
+.fd-top{display:flex;align-items:center;gap:12px}
+.fd-rating .num{display:block;font:800 30px/1 var(--display);letter-spacing:-0.02em}
+.fd-meta{font-size:14px;line-height:1.35}
+.fd-meta .muted,.muted{color:var(--muted)}
+.fav-detail .tags{margin-top:8px}
 .icon-btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;width:44px;height:44px;
   display:grid;place-items:center;flex:none}
 .icon-btn svg{width:22px;height:22px}
@@ -239,9 +262,12 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
 <div class="wrap">
   <div class="titlebar">
     <h1 data-i18n="title">Kam na jedlo</h1>
+    <div class="title-actions">
+    <button id="btnFavs" class="icon-btn fav-head" aria-label="Obľúbené" data-i18n-aria="favTitle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.4C1.4 7.6 3.6 4 7.1 4c2 0 3.6 1.1 4.9 2.8C13.3 5.1 14.9 4 16.9 4c3.5 0 5.7 3.6 4.4 7.1-1.8 4.8-9.3 9.4-9.3 9.4z"/></svg><span class="fav-count" id="favCount" hidden></span></button>
     <button id="btnSettings" class="icon-btn" aria-label="Nastavenia" data-i18n-aria="settings">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
     </button>
+    </div>
   </div>
 
   <section aria-label="Vyhľadávanie" data-i18n-aria="searchAria">
@@ -325,6 +351,9 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
     <p style="margin-top:18px"><strong data-i18n="usageTitle">Vyhľadávania tento mesiac</strong></p>
     <p class="usage" id="usageBig"></p>
     <p class="note" data-i18n="usageNote">Google dáva 1 000 vyhľadávaní mesačne zadarmo. Appka spustí najviac toľko, koľko je nastavený limit pre tento telefón, a potom do konca mesiaca prestane hľadať. Počítadlo sa vynuluje 1. dňa v mesiaci približne o 9:00 ráno, rovnako ako u Google. Každé „Načítať ďalších 20“ je tiež jedno vyhľadávanie. Rovnaké hľadanie zopakované počas jedného spustenia appky sa nepočíta.</p>
+    <p style="margin-top:18px"><strong data-i18n="dTitle">Detaily obľúbených tento mesiac</strong></p>
+    <p class="usage" id="dUsageBig"></p>
+    <p class="note" data-i18n="dNote">Rozkliknutie obľúbeného podniku načíta aktuálne údaje z Google.</p>
     <p style="margin-top:18px"><strong data-i18n="limitTitle">Limit pre tento telefón</strong></p>
     <p class="note" data-i18n="limitNote">Ak appku s tým istým kľúčom používa viac telefónov, súčet ich limitov nesmie byť vyšší ako 900. Pri dvoch telefónoch nastav napríklad 450 a 450.</p>
     <div class="row">
@@ -338,6 +367,17 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
     </div>
     <div class="row" style="margin-top:16px">
       <button class="btn primary" id="btnCloseSettings" type="button" autofocus data-i18n="done">Hotovo</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="dlgFavs">
+  <div class="dlg">
+    <h2 data-i18n="favTitle">Obľúbené</h2>
+    <p class="note" data-i18n="favNote">Obľúbené sú uložené len v tomto telefóne.</p>
+    <ul class="fav-list" id="favList"></ul>
+    <div class="row" style="margin-top:16px">
+      <button class="btn primary" id="btnCloseFavs" type="button" data-i18n="close">Zavrieť</button>
     </div>
   </div>
 </dialog>
@@ -473,7 +513,7 @@ sk:{
   priceNames:["Zadarmo","Lacné","Stredné","Drahé","Luxusné"], priceUnknown:"cena neuvedená", perPerson:"{c} na osobu",
   from:"od {a}", range:"{a}\u00a0až\u00a0{b}", reviewsShort:"hodn.", noRating:"bez<br>hodn.",
   tagCard:"Berú kartu", tagCash:"Len hotovosť", tagPayUnknown:"Platba neuvedená", tagOpen:"Teraz otvorené",
-  tagClosed:"Teraz zatvorené", tagTemp:"Dočasne zatvorené", nav:"Navigovať", inMaps:"V Mapách",
+  tagClosed:"Teraz zatvorené", tagTemp:"Dočasne zatvorené", tagPerm:"Natrvalo zatvorené", nav:"Navigovať", inMaps:"V Mapách",
   emptyFilt:"Filtrom nevyhovuje žiadny z {n} nájdených podnikov. Uvoľni filtre alebo načítaj ďalšie.",
   rRating:"Hodnotenie", rCount:"Počet hodnotení", rPrice:"Cena", rPay:"Platba", rOpen:"Teraz otvorené", yes:"Áno", no:"Nie",
   rDist:"Vzdialenosť", rType:"Typ", rAddr:"Adresa", notListedF:"neuvedená", payNotListed:"Neuvedená",
@@ -500,7 +540,12 @@ sk:{
   found:"Nájdené podniky: {n}.", foundMore:"Nájdené podniky: {n}. Ďalšie môžeš načítať dole.",
   startKey:"Na začiatok vlož svoj Google kľúč. Nastavenia otvoríš cez ozubené koliesko vpravo hore.",
   startReady:"Vyber okolie alebo mesto, čo chceš jesť, a ťukni na Hľadať.",
-  langNote:"Názvy typov podnikov a recenzie od Google sa zmenia pri ďalšom hľadaní."
+  langNote:"Názvy typov podnikov a recenzie od Google sa zmenia pri ďalšom hľadaní.",
+  favTitle:"Obľúbené", favAdd:"Pridať do obľúbených", favRemove:"Odobrať z obľúbených", favRemoveBtn:"Odobrať",
+  favNote:"Obľúbené sú uložené len v tomto telefóne. Ťuknutím na názov načítaš aktuálne údaje.",
+  dTitle:"Detaily obľúbených tento mesiac", loading:"Načítavam…",
+  dNote:"Rozkliknutie obľúbeného podniku načíta aktuálne údaje z Google. Google to počíta zvlášť a dáva na to ďalších 1 000 zadarmo mesačne, takže to neminie vyhľadávania. Platí rovnaký limit pre tento telefón. Ten istý podnik sa počas jedného spustenia appky započíta len raz.",
+  dLimit:"Limit {l} načítaní detailov pre tento telefón je na tento mesiac vyčerpaný. Navigovať a V Mapách fungujú ďalej.", favEmpty:"Zatiaľ nemáš žiadne obľúbené podniky. Pridáš ich srdiečkom pri podniku vo výsledkoch."
 },
 cs:{
   title:"Kam na jídlo", settings:"Nastavení", searchAria:"Vyhledávání", near:"V okolí", city:"Ve městě",
@@ -526,7 +571,7 @@ cs:{
   priceNames:["Zdarma","Levné","Střední","Drahé","Luxusní"], priceUnknown:"cena neuvedena", perPerson:"{c} na osobu",
   from:"od {a}", range:"{a}\u00a0až\u00a0{b}", reviewsShort:"hodn.", noRating:"bez<br>hodn.",
   tagCard:"Berou kartu", tagCash:"Jen hotovost", tagPayUnknown:"Platba neuvedena", tagOpen:"Nyní otevřeno",
-  tagClosed:"Nyní zavřeno", tagTemp:"Dočasně zavřeno", nav:"Navigovat", inMaps:"V Mapách",
+  tagClosed:"Nyní zavřeno", tagTemp:"Dočasně zavřeno", tagPerm:"Trvale zavřeno", nav:"Navigovat", inMaps:"V Mapách",
   emptyFilt:"Filtrům nevyhovuje žádný z {n} nalezených podniků. Uvolni filtry nebo načti další.",
   rRating:"Hodnocení", rCount:"Počet hodnocení", rPrice:"Cena", rPay:"Platba", rOpen:"Nyní otevřeno", yes:"Ano", no:"Ne",
   rDist:"Vzdálenost", rType:"Typ", rAddr:"Adresa", notListedF:"neuvedena", payNotListed:"Neuvedena",
@@ -553,7 +598,12 @@ cs:{
   found:"Nalezené podniky: {n}.", foundMore:"Nalezené podniky: {n}. Další můžeš načíst dole.",
   startKey:"Nejdřív vlož svůj Google klíč. Nastavení otevřeš přes ozubené kolečko vpravo nahoře.",
   startReady:"Vyber okolí nebo město, co chceš jíst, a klepni na Hledat.",
-  langNote:"Názvy typů podniků a recenze od Google se změní při dalším hledání."
+  langNote:"Názvy typů podniků a recenze od Google se změní při dalším hledání.",
+  favTitle:"Oblíbené", favAdd:"Přidat do oblíbených", favRemove:"Odebrat z oblíbených", favRemoveBtn:"Odebrat",
+  favNote:"Oblíbené jsou uložené jen v tomto telefonu. Klepnutím na název načteš aktuální údaje.",
+  dTitle:"Detaily oblíbených tento měsíc", loading:"Načítám…",
+  dNote:"Rozkliknutí oblíbeného podniku načte aktuální údaje z Google. Google to počítá zvlášť a dává na to dalších 1 000 zdarma měsíčně, takže to nespotřebuje vyhledávání. Platí stejný limit pro tento telefon. Stejný podnik se během jednoho spuštění aplikace započítá jen jednou.",
+  dLimit:"Limit {l} načtení detailů pro tento telefon je na tento měsíc vyčerpán. Navigovat a V Mapách fungují dál.", favEmpty:"Zatím nemáš žádné oblíbené podniky. Přidáš je srdíčkem u podniku ve výsledcích."
 },
 en:{
   title:"Where to Eat", settings:"Settings", searchAria:"Search", near:"Nearby", city:"In a city",
@@ -579,7 +629,7 @@ en:{
   priceNames:["Free","Cheap","Moderate","Expensive","Very expensive"], priceUnknown:"price not listed", perPerson:"{c} per person",
   from:"from {a}", range:"{a}–{b}", reviewsShort:"reviews", noRating:"no<br>rating",
   tagCard:"Card accepted", tagCash:"Cash only", tagPayUnknown:"Payment not listed", tagOpen:"Open now",
-  tagClosed:"Closed now", tagTemp:"Temporarily closed", nav:"Directions", inMaps:"In Maps",
+  tagClosed:"Closed now", tagTemp:"Temporarily closed", tagPerm:"Permanently closed", nav:"Directions", inMaps:"In Maps",
   emptyFilt:"None of the {n} places found match your filters. Loosen the filters or load more.",
   rRating:"Rating", rCount:"Reviews", rPrice:"Price", rPay:"Payment", rOpen:"Open now", yes:"Yes", no:"No",
   rDist:"Distance", rType:"Type", rAddr:"Address", notListedF:"not listed", payNotListed:"Not listed",
@@ -606,7 +656,12 @@ en:{
   found:"Places found: {n}.", foundMore:"Places found: {n}. You can load more below.",
   startKey:"To start, paste your Google key. Open Settings with the gear icon, top right.",
   startReady:"Choose nearby or a city and what you want to eat, then tap Search.",
-  langNote:"Place types and reviews from Google switch language with your next search."
+  langNote:"Place types and reviews from Google switch language with your next search.",
+  favTitle:"Favourites", favAdd:"Add to favourites", favRemove:"Remove from favourites", favRemoveBtn:"Remove",
+  favNote:"Favourites are stored on this phone only. Tap a name to load up-to-date details.",
+  dTitle:"Favourite details this month", loading:"Loading…",
+  dNote:"Opening a favourite loads up-to-date details from Google. Google counts this separately with another 1,000 free per month, so it doesn't use up your searches. The same limit for this phone applies. Opening the same place again while the app is open counts only once.",
+  dLimit:"This phone's limit of {l} detail loads for this month is used up. Directions and In Maps still work.", favEmpty:"No favourites yet. Add places with the heart next to them in the results."
 }};
 function t(key, vars){
   const L = T[prefs.lang] || T.sk;
@@ -731,12 +786,22 @@ function usage(){
   return u;
 }
 function addUsage(){ const u = usage(); u.monthCount++; store.set("kj_usage", u); renderUsage(); }
+/* Detail obľúbeného podniku je u Google samostatná služba s vlastnými 1 000 zadarmo mesačne,
+   preto má vlastné počítadlo s rovnakým limitom pre telefón ako vyhľadávanie. */
+function dUsage(){
+  const u = store.get("kj_dusage", {});
+  const m = googleMonth();
+  if (u.month !== m){ u.month = m; u.monthCount = 0; }
+  return u;
+}
+function addDUsage(){ const u = dUsage(); u.monthCount++; store.set("kj_dusage", u); renderUsage(); }
 function renderUsage(){
   const u = usage();
   $("#usageLine").textContent = t("usageLine", {u:u.monthCount, l:LIMIT()});
   $("#usageBig").textContent = t("usageBig", {u:u.monthCount, l:LIMIT()});
   $("#limitInput").value = LIMIT();
   $("#usageInput").value = u.monthCount;
+  $("#dUsageBig").textContent = t("usageBig", {u:dUsage().monthCount, l:LIMIT()});
 }
 
 /* ---------- Pomocníci ---------- */
@@ -1148,6 +1213,7 @@ function renderResults(){
         <div class="actions">
           <button type="button" class="btn primary" data-nav="${esc(p.id)}">${t("nav")}</button>
           <button type="button" class="btn" data-detail="${esc(p.id)}">${t("inMaps")}</button>
+          <button type="button" class="btn fav" data-fav="${esc(p.id)}" aria-pressed="${isFav(p.id)}" aria-label="${esc(isFav(p.id) ? t("favRemove") : t("favAdd"))}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.4C1.4 7.6 3.6 4 7.1 4c2 0 3.6 1.1 4.9 2.8C13.3 5.1 14.9 4 16.9 4c3.5 0 5.7 3.6 4.4 7.1-1.8 4.8-9.3 9.4-9.3 9.4z"/></svg></button>
           <label class="cmp"><input type="checkbox" data-cmp="${esc(p.id)}" ${compare.has(p.id) ? "checked" : ""}> ${t("compare")}</label>
         </div>
       </div>`;
@@ -1162,6 +1228,12 @@ $("#results").addEventListener("click", e => {
   const nav = e.target.closest("[data-nav]"), det = e.target.closest("[data-detail]");
   if (nav){ const p = findPlace(nav.dataset.nav); if (p) openMaps(navUrl(p)); }
   if (det){ const p = findPlace(det.dataset.detail); if (p) openMaps(detailUrl(p)); }
+  const fv = e.target.closest("[data-fav]");
+  if (fv){
+    const p = findPlace(fv.dataset.fav);
+    if (p){ toggleFav(p); const on = isFav(p.id); fv.setAttribute("aria-pressed", String(on)); fv.setAttribute("aria-label", on ? t("favRemove") : t("favAdd")); }
+    return;
+  }
   const tg = e.target.closest("[data-toggle]");
   if (tg){
     const id = tg.dataset.toggle, box = document.getElementById("info-" + id);
@@ -1211,6 +1283,109 @@ function renderCompare(){
     <tr><th></th>${ps.map(p => `<td><button type="button" class="btn primary" data-nav="${esc(p.id)}">${t("nav")}</button></td>`).join("")}</tr>
     </tbody></table>`;
 }
+/* ---------- Obľúbené (uložené len v telefóne, bez Google, nič nestoja) ---------- */
+const getFavs = () => store.get("kj_favs", []);
+const isFav = id => getFavs().some(f => f.id === id);
+function toggleFav(p){
+  let favs = getFavs();
+  if (favs.some(f => f.id === p.id)) favs = favs.filter(f => f.id !== p.id);
+  else favs.unshift({id:p.id, displayName:{text:p.displayName?.text || ""}, formattedAddress:p.formattedAddress || "", googleMapsUri:p.googleMapsUri || ""});
+  store.set("kj_favs", favs); renderFavCount();
+}
+function renderFavCount(){
+  const n = getFavs().length, c = $("#favCount");
+  c.hidden = !n; c.textContent = n;
+  $("#btnFavs").classList.toggle("has", n > 0);
+}
+function renderFavs(){
+  const favs = getFavs(), ul = $("#favList");
+  if (!favs.length){ ul.innerHTML = `<li class="fav-empty">${t("favEmpty")}</li>`; return; }
+  ul.innerHTML = favs.map(f => `<li>
+    <button type="button" class="name-btn fname" data-ftoggle="${esc(f.id)}" aria-expanded="${favOpen.has(f.id)}"><span class="chev" aria-hidden="true"></span>${esc(f.displayName.text)}</button>
+    <div class="faddr">${esc(f.formattedAddress)}</div>
+    <div class="row">
+      <button type="button" class="btn primary" data-fnav="${esc(f.id)}">${t("nav")}</button>
+      <button type="button" class="btn" data-fdetail="${esc(f.id)}">${t("inMaps")}</button>
+      <button type="button" class="btn" data-fdel="${esc(f.id)}">${t("favRemoveBtn")}</button>
+    </div>
+    <div class="fav-detail" id="fd-${esc(f.id)}" ${favOpen.has(f.id) ? "" : "hidden"}>${favOpen.has(f.id) ? favDetailHtml(f.id) : ""}</div></li>`).join("");
+}
+const favOpen = new Set();
+const detailCache = new Map(); // len počas spustenia appky, kľúč: jazyk + id
+let favLoading = new Set();
+function favDetailHtml(id){
+  const key = prefs.lang + id;
+  if (favLoading.has(key)) return `<p class="note">${t("loading")}</p>`;
+  const v = detailCache.get(key);
+  if (!v) return "";
+  if (v.error) return `<p class="note err">${esc(v.error)}</p>`;
+  const p = v.place, r = p.rating;
+  const cls = !r ? "none" : r >= 4.5 ? "hi" : r >= 4 ? "good" : r >= 3.5 ? "mid" : "low";
+  const price = priceText(p);
+  const open = p.currentOpeningHours?.openNow;
+  return `<div class="fd-top">
+      <span class="fd-rating score ${cls}"><span class="num">${r ? nf1.format(r) : "–"}</span></span>
+      <span class="fd-meta">${r ? `${nf0.format(p.userRatingCount||0)} ${t("reviewsShort")}` : ""}${price ? `<br>${esc(price)}${p.priceRange?.startPrice ? ` <span class="muted">(${esc(t("perPerson", {c:""}).trim())})</span>` : ""}` : ""}${p.primaryTypeDisplayName?.text ? `<br><span class="muted">${esc(p.primaryTypeDisplayName.text)}</span>` : ""}</span>
+    </div>
+    <div class="tags">${payTag(p)}
+      ${open === true ? `<span class="tag ok">${t("tagOpen")}</span>` : open === false ? `<span class="tag">${t("tagClosed")}</span>` : ""}
+      ${p.businessStatus === "CLOSED_TEMPORARILY" ? `<span class="tag warn">${t("tagTemp")}</span>` : ""}
+      ${p.businessStatus === "CLOSED_PERMANENTLY" ? `<span class="tag warn">${t("tagPerm")}</span>` : ""}
+    </div>
+    <div class="more-info">${moreInfo(p)}</div>`;
+}
+async function loadFavDetail(id){
+  const key = prefs.lang + id, box = document.getElementById("fd-" + id);
+  if (detailCache.has(key) && !detailCache.get(key).error){ if (box) box.innerHTML = favDetailHtml(id); return; }
+  const apiKey = getKey();
+  if (!apiKey){ detailCache.set(key, {error:t("needKey")}); if (box) box.innerHTML = favDetailHtml(id); return; }
+  if (dUsage().monthCount >= LIMIT()){ detailCache.set(key, {error:t("dLimit", {l:LIMIT()})}); if (box) box.innerHTML = favDetailHtml(id); detailCache.delete(key); return; }
+  favLoading.add(key); if (box) box.innerHTML = favDetailHtml(id);
+  try {
+    const fields = [...BASE_FIELDS, ...OPTIONAL_FIELDS].map(f => f.replace(/^places\./, ""));
+    let data = null;
+    for (let attempt = 0; attempt < 12 && !data; attempt++){
+      const res = await fetch(`https://places.googleapis.com/v1/places/${encodeURIComponent(id)}?languageCode=${LANGS[prefs.lang].google}`, {
+        headers:{"X-Goog-Api-Key":apiKey, "X-Goog-FieldMask":fields.join(",")}
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.ok){ data = json; break; }
+      const msg = json?.error?.message || "";
+      const bad = fields.find(f => msg.includes(f) && OPTIONAL_FIELDS.includes("places." + f));
+      if (res.status === 400 && bad){ OPTIONAL_FIELDS = OPTIONAL_FIELDS.filter(f => f !== "places." + bad); fields.splice(fields.indexOf(bad), 1); continue; }
+      throw new Error(explainError(res.status, msg));
+    }
+    if (!data) throw new Error(t("errFailed"));
+    addDUsage();
+    detailCache.set(key, {place:data});
+  } catch (err){
+    detailCache.set(key, {error: err.message && err.message !== "Failed to fetch" ? err.message : t("netErr")});
+  } finally {
+    favLoading.delete(key);
+    const b = document.getElementById("fd-" + id); if (b) b.innerHTML = favDetailHtml(id);
+    const v = detailCache.get(key); if (v && v.error) detailCache.delete(key); // pri chybe sa dá skúsiť znova
+  }
+}
+$("#btnFavs").addEventListener("click", () => { renderFavs(); const d = $("#dlgFavs"); d.showModal(); d.scrollTop = 0; });
+$("#btnCloseFavs").addEventListener("click", () => $("#dlgFavs").close());
+$("#favList").addEventListener("click", e => {
+  const find = id => getFavs().find(f => f.id === id);
+  const n = e.target.closest("[data-fnav]"), d = e.target.closest("[data-fdetail]"), x = e.target.closest("[data-fdel]");
+  const tg = e.target.closest("[data-ftoggle]");
+  if (tg){
+    const id = tg.dataset.ftoggle, box = document.getElementById("fd-" + id), open = !favOpen.has(id);
+    open ? favOpen.add(id) : favOpen.delete(id);
+    tg.setAttribute("aria-expanded", String(open));
+    if (box){ box.hidden = !open; if (open) loadFavDetail(id); }
+    return;
+  }
+  const dd = e.target.closest("[data-detail]");
+  if (dd){ const f = find(dd.dataset.detail); if (f) openMaps(detailUrl(f)); return; }
+  if (n){ const f = find(n.dataset.fnav); if (f) openMaps(navUrl(f)); }
+  if (d){ const f = find(d.dataset.fdetail); if (f) openMaps(detailUrl(f)); }
+  if (x){ store.set("kj_favs", getFavs().filter(f => f.id !== x.dataset.fdel)); renderFavs(); renderFavCount(); renderResults(); }
+});
+
 $("#cmpTable").addEventListener("click", e => {
   const nav = e.target.closest("[data-nav]");
   if (nav){ const p = findPlace(nav.dataset.nav); if (p) openMaps(navUrl(p)); }
@@ -1386,7 +1561,7 @@ function applyLang(){
     prefs.lang = code; savePrefs(); applyLang();
     const note = $("#langNote"); if (results.length){ note.textContent = t("langNote"); note.hidden = false; }
   })));
-  renderControls(); renderUsage(); renderKeyState(); renderResults();
+  renderControls(); renderUsage(); renderKeyState(); renderResults(); renderFavCount();
   setStatus(results.length ? t(nextToken ? "foundMore" : "found", {n:results.length}) : (getKey() ? t("startReady") : t("startKey")));
 }
 

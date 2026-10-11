@@ -222,112 +222,115 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
 <div class="awning" aria-hidden="true"></div>
 <div class="wrap">
   <div class="titlebar">
-    <h1>Kam na jedlo</h1>
-    <button id="btnSettings" class="icon-btn" aria-label="Nastavenia">
+    <h1 data-i18n="title">Kam na jedlo</h1>
+    <button id="btnSettings" class="icon-btn" aria-label="Nastavenia" data-i18n-aria="settings">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
     </button>
   </div>
 
-  <section aria-label="Vyhľadávanie">
+  <section aria-label="Vyhľadávanie" data-i18n-aria="searchAria">
     <div class="seg">
-      <button type="button" data-mode="near">V okolí</button>
-      <button type="button" data-mode="city">V meste</button>
+      <button type="button" data-mode="near" data-i18n="near">V okolí</button>
+      <button type="button" data-mode="city" data-i18n="city">V meste</button>
     </div>
     <div id="nearOpts" class="field">
       <div class="chips" id="radii"></div>
     </div>
     <div id="cityOpts" class="field" hidden>
       <div class="city-wrap">
-        <input id="city" type="text" placeholder="Napr. Brno, Bratislava, Košice" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search" role="combobox" aria-autocomplete="list" aria-controls="citySug" aria-expanded="false">
+        <input id="city" type="text" placeholder="Napr. Brno, Bratislava, Košice" data-i18n-ph="cityPh" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search" role="combobox" aria-autocomplete="list" aria-controls="citySug" aria-expanded="false">
         <ul id="citySug" class="sug" role="listbox" hidden></ul>
       </div>
       <div id="recent" class="recent" hidden></div>
     </div>
     <div class="tabs" id="groups" role="tablist"></div>
     <div class="chips scroll" id="cuisines"></div>
-    <button id="btnSearch" class="search-btn" type="button">Hľadať</button>
+    <button id="btnSearch" class="search-btn" type="button" data-i18n="search">Hľadať</button>
   </section>
 
   <details class="filters" id="filtersBox">
     <summary><span id="filtersSummary">Filtre a zoradenie</span></summary>
     <div class="filters-body">
-      <p class="field-label">Hodnotenie</p>
+      <p class="field-label" data-i18n="fRating">Hodnotenie</p>
       <div class="chips" id="fRating"></div>
-      <p class="field-label">Cena</p>
+      <p class="field-label" data-i18n="fPrice">Cena</p>
       <div class="chips" id="fPrice"></div>
-      <p class="field-label">Platba</p>
+      <p class="field-label" data-i18n="fPay">Platba</p>
       <div class="chips" id="fPay"></div>
-      <label class="toggle"><input type="checkbox" id="fOpen"> Len teraz otvorené</label>
-      <label class="toggle"><input type="checkbox" id="fHideUnknown"> Skryť podniky bez údaja o cene alebo platbe</label>
-      <p class="field-label">Zoradiť</p>
+      <label class="toggle"><input type="checkbox" id="fOpen"> <span data-i18n="fOpen">Len teraz otvorené</span></label>
+      <label class="toggle"><input type="checkbox" id="fHideUnknown"> <span data-i18n="fHide">Skryť podniky bez údaja o cene alebo platbe</span></label>
+      <p class="field-label" data-i18n="sortLbl">Zoradiť</p>
       <select id="sort">
-        <option value="best">Odporúčané (hodnotenie aj cena)</option>
-        <option value="rating">Najlepšie hodnotené</option>
-        <option value="cheap">Najlacnejšie</option>
-        <option value="near">Najbližšie</option>
-        <option value="reviews">Najviac hodnotení</option>
+        <option value="best" data-i18n="sortBest">Odporúčané (hodnotenie aj cena)</option>
+        <option value="rating" data-i18n="sortRating">Najlepšie hodnotené</option>
+        <option value="cheap" data-i18n="sortCheap">Najlacnejšie</option>
+        <option value="near" data-i18n="sortNear">Najbližšie</option>
+        <option value="reviews" data-i18n="sortReviews">Najviac hodnotení</option>
       </select>
     </div>
   </details>
 
   <p id="status" role="status" aria-live="polite"></p>
   <ol class="results" id="results"></ol>
-  <button id="btnMore" class="btn more" type="button" hidden>Načítať ďalších 20</button>
+  <button id="btnMore" class="btn more" type="button" hidden data-i18n="more">Načítať ďalších 20</button>
 
   <footer>
     <p id="usageLine"></p>
-    <p>Údaje o podnikoch: Google Maps</p>
+    <p data-i18n="attribution">Údaje o podnikoch: Google Maps</p>
   </footer>
 </div>
 
 <div class="cmpbar" id="cmpBar" hidden>
   <span id="cmpCount"></span>
-  <button class="btn ghost" id="btnCmpClear" type="button">Zrušiť</button>
-  <button class="btn" id="btnCompare" type="button">Porovnať</button>
+  <button class="btn ghost" id="btnCmpClear" type="button" data-i18n="cmpClear">Zrušiť</button>
+  <button class="btn" id="btnCompare" type="button" data-i18n="compare">Porovnať</button>
 </div>
 
 <dialog id="dlgSettings">
   <div class="dlg">
-    <h2>Nastavenia</h2>
-    <p><strong>Google kľúč</strong></p>
-    <p class="note">Kľúč sa uloží len v tomto zariadení. Do kódu appky ani nikam inam sa neposiela, používa sa iba pri vyhľadávaní cez Google.</p>
-    <input id="keyInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Vlož kľúč začínajúci AIza…">
+    <h2 data-i18n="settings">Nastavenia</h2>
+    <p><strong data-i18n="lang">Jazyk</strong></p>
+    <div class="chips" id="langChips"></div>
+    <p class="note" id="langNote" hidden></p>
+    <p style="margin-top:18px"><strong data-i18n="gKey">Google kľúč</strong></p>
+    <p class="note" data-i18n="keyNote">Kľúč sa uloží len v tomto zariadení. Do kódu appky ani nikam inam sa neposiela, používa sa iba pri vyhľadávaní cez Google.</p>
+    <input id="keyInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Vlož kľúč začínajúci AIza…" data-i18n-ph="keyPh">
     <div class="row">
-      <button class="btn primary" id="btnSaveKey" type="button">Uložiť kľúč</button>
-      <button class="btn" id="btnShowKey" type="button">Zobraziť</button>
-      <button class="btn" id="btnDelKey" type="button">Vymazať kľúč</button>
+      <button class="btn primary" id="btnSaveKey" type="button" data-i18n="saveKey">Uložiť kľúč</button>
+      <button class="btn" id="btnShowKey" type="button" data-i18n="show">Zobraziť</button>
+      <button class="btn" id="btnDelKey" type="button" data-i18n="delKey">Vymazať kľúč</button>
     </div>
     <p class="note" id="keyState"></p>
 
-    <label class="toggle"><input type="checkbox" id="optGmApp"> Otvárať priamo v appke Google Mapy</label>
-    <p class="note">Ak appku Google Mapy nemáš, vypni túto možnosť a otvorí sa webová verzia.</p>
+    <label class="toggle"><input type="checkbox" id="optGmApp"> <span data-i18n="gmApp">Otvárať priamo v appke Google Mapy</span></label>
+    <p class="note" data-i18n="gmNote">Ak appku Google Mapy nemáš, vypni túto možnosť a otvorí sa webová verzia.</p>
 
-    <p style="margin-top:18px"><strong>Vyhľadávania tento mesiac</strong></p>
+    <p style="margin-top:18px"><strong data-i18n="usageTitle">Vyhľadávania tento mesiac</strong></p>
     <p class="usage" id="usageBig"></p>
-    <p class="note">Google dáva 1 000 vyhľadávaní mesačne zadarmo. Appka spustí najviac toľko, koľko je nastavený limit pre tento telefón, a potom do konca mesiaca prestane hľadať. Počítadlo sa vynuluje 1. dňa v mesiaci približne o 9:00 ráno, rovnako ako u Google. Každé „Načítať ďalších 20“ je tiež jedno vyhľadávanie. Rovnaké hľadanie zopakované počas jedného spustenia appky sa nepočíta.</p>
-    <p style="margin-top:18px"><strong>Limit pre tento telefón</strong></p>
-    <p class="note">Ak appku s tým istým kľúčom používa viac telefónov, súčet ich limitov nesmie byť vyšší ako 900. Pri dvoch telefónoch nastav napríklad 450 a 450.</p>
+    <p class="note" data-i18n="usageNote">Google dáva 1 000 vyhľadávaní mesačne zadarmo. Appka spustí najviac toľko, koľko je nastavený limit pre tento telefón, a potom do konca mesiaca prestane hľadať. Počítadlo sa vynuluje 1. dňa v mesiaci približne o 9:00 ráno, rovnako ako u Google. Každé „Načítať ďalších 20“ je tiež jedno vyhľadávanie. Rovnaké hľadanie zopakované počas jedného spustenia appky sa nepočíta.</p>
+    <p style="margin-top:18px"><strong data-i18n="limitTitle">Limit pre tento telefón</strong></p>
+    <p class="note" data-i18n="limitNote">Ak appku s tým istým kľúčom používa viac telefónov, súčet ich limitov nesmie byť vyšší ako 900. Pri dvoch telefónoch nastav napríklad 450 a 450.</p>
     <div class="row">
       <input id="limitInput" type="number" min="0" max="900" inputmode="numeric" style="width:120px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px">
-      <button class="btn" id="btnSetLimit" type="button">Uložiť limit</button>
+      <button class="btn" id="btnSetLimit" type="button" data-i18n="saveLimit">Uložiť limit</button>
     </div>
-    <p class="note">Počítadlo je uložené len v tomto telefóne. Ak by sa vymazalo (napríklad po odstránení appky z plochy), pozri skutočný počet v Google Cloud a nastav ho tu:</p>
+    <p class="note" data-i18n="counterNote">Počítadlo je uložené len v tomto telefóne. Ak by sa vymazalo (napríklad po odstránení appky z plochy), pozri skutočný počet v Google Cloud a nastav ho tu:</p>
     <div class="row">
       <input id="usageInput" type="number" min="0" max="900" inputmode="numeric" style="width:120px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px">
-      <button class="btn" id="btnSetUsage" type="button">Nastaviť počítadlo</button>
+      <button class="btn" id="btnSetUsage" type="button" data-i18n="setCounter">Nastaviť počítadlo</button>
     </div>
     <div class="row" style="margin-top:16px">
-      <button class="btn primary" id="btnCloseSettings" type="button" autofocus>Hotovo</button>
+      <button class="btn primary" id="btnCloseSettings" type="button" autofocus data-i18n="done">Hotovo</button>
     </div>
   </div>
 </dialog>
 
 <dialog id="dlgCompare">
   <div class="dlg">
-    <h2>Porovnanie</h2>
+    <h2 data-i18n="cmpTitle">Porovnanie</h2>
     <div class="cmp-scroll" id="cmpTable"></div>
     <div class="row" style="margin-top:16px">
-      <button class="btn primary" id="btnCloseCompare" type="button">Zavrieť</button>
+      <button class="btn primary" id="btnCloseCompare" type="button" data-i18n="close">Zavrieť</button>
     </div>
   </div>
 </dialog>
@@ -417,10 +420,218 @@ const GROUPS = [
 ];
 const CUISINES = GROUPS.flatMap(g => g.items.map(i => ({...i, group:g.id})));
 const RADII = [1000, 3000, 5000, 10000];
-const RATINGS = [{v:0,l:"Všetky"},{v:3.5,l:"3,5+"},{v:4,l:"4,0+"},{v:4.5,l:"4,5+"}];
+const RATINGS = [0, 3.5, 4, 4.5];
 const PRICE_IDX = {PRICE_LEVEL_FREE:0, PRICE_LEVEL_INEXPENSIVE:1, PRICE_LEVEL_MODERATE:2, PRICE_LEVEL_EXPENSIVE:3, PRICE_LEVEL_VERY_EXPENSIVE:4};
-const PRICE_NAMES = ["Zadarmo","Lacné","Stredné","Drahé","Luxusné"];
-const PAYS = [{v:"any",l:"Nezáleží"},{v:"card",l:"Kartou"},{v:"cash",l:"Len hotovosť"}];
+const priceName = i => t("priceNames")[i];
+const PAYS = ["any","card","cash"];
+
+/* ---------- Jazyky appky: slovenčina, čeština, angličtina ---------- */
+const LANGS = {sk:{name:"Slovenčina", locale:"sk-SK", google:"sk"}, cs:{name:"Čeština", locale:"cs-CZ", google:"cs"}, en:{name:"English", locale:"en-GB", google:"en"}};
+function detectLang(){
+  const l = (navigator.language || "sk").toLowerCase();
+  return l.startsWith("cs") ? "cs" : l.startsWith("en") ? "en" : "sk";
+}
+const T = {
+sk:{
+  title:"Kam na jedlo", settings:"Nastavenia", searchAria:"Vyhľadávanie", near:"V okolí", city:"V meste",
+  cityPh:"Napr. Brno, Bratislava, Košice", search:"Hľadať", filters:"Filtre a zoradenie", filtersActive:"Filtre a zoradenie (aktívne: {n})",
+  fRating:"Hodnotenie", fPrice:"Cena", fPay:"Platba", fOpen:"Len teraz otvorené", fHide:"Skryť podniky bez údaja o cene alebo platbe",
+  sortLbl:"Zoradiť", sortBest:"Odporúčané (hodnotenie aj cena)", sortRating:"Najlepšie hodnotené", sortCheap:"Najlacnejšie",
+  sortNear:"Najbližšie", sortReviews:"Najviac hodnotení", more:"Načítať ďalších 20", attribution:"Údaje o podnikoch: Google Maps",
+  usageLine:"Vyhľadávania tento mesiac: {u} z {l}", usageBig:"{u} z {l}", cmpClear:"Zrušiť", compare:"Porovnať",
+  cmpOne:"Vybraný 1 podnik, pridaj ďalší", cmpMany:"Vybrané {n} podniky", cmpMax:"Porovnať môžeš naraz najviac 3 podniky.",
+  cmpTitle:"Porovnanie", close:"Zavrieť", done:"Hotovo", lang:"Jazyk", gKey:"Google kľúč",
+  keyNote:"Kľúč sa uloží len v tomto zariadení. Do kódu appky ani nikam inam sa neposiela, používa sa iba pri vyhľadávaní cez Google.",
+  keyPh:"Vlož kľúč začínajúci AIza…", saveKey:"Uložiť kľúč", show:"Zobraziť", hide:"Skryť", delKey:"Vymazať kľúč",
+  keyEnds:"Uložený kľúč končí na …{k}.", keyNone:"Žiadny kľúč nie je uložený.", keyEmpty:"Najprv vlož kľúč do poľa.",
+  gmApp:"Otvárať priamo v appke Google Mapy", gmNote:"Ak appku Google Mapy nemáš, vypni túto možnosť a otvorí sa webová verzia.",
+  usageTitle:"Vyhľadávania tento mesiac",
+  usageNote:"Google dáva 1 000 vyhľadávaní mesačne zadarmo. Appka spustí najviac toľko, koľko je nastavený limit pre tento telefón, a potom do konca mesiaca prestane hľadať. Počítadlo sa vynuluje 1. dňa v mesiaci približne o 9:00 ráno, rovnako ako u Google. Každé „Načítať ďalších 20“ je tiež jedno vyhľadávanie. Rovnaké hľadanie zopakované počas jedného spustenia appky sa nepočíta.",
+  limitTitle:"Limit pre tento telefón",
+  limitNote:"Ak appku s tým istým kľúčom používa viac telefónov, súčet ich limitov nesmie byť vyšší ako 900. Pri dvoch telefónoch nastav napríklad 450 a 450.",
+  saveLimit:"Uložiť limit",
+  counterNote:"Počítadlo je uložené len v tomto telefóne. Ak by sa vymazalo (napríklad po odstránení appky z plochy), pozri skutočný počet v Google Cloud a nastav ho tu:",
+  setCounter:"Nastaviť počítadlo", recentLbl:"Naposledy:", recentHint:"naposledy", clear:"Vymazať",
+  cityPicked:"Mesto: {c}. Ťukni na Hľadať.", ratingAll:"Všetky", pay_any:"Nezáleží", pay_card:"Kartou", pay_cash:"Len hotovosť",
+  priceNames:["Zadarmo","Lacné","Stredné","Drahé","Luxusné"], priceUnknown:"cena neuvedená", perPerson:"{c} na osobu",
+  from:"od {a}", range:"{a}\u00a0až\u00a0{b}", reviewsShort:"hodn.", noRating:"bez<br>hodn.",
+  tagCard:"Berú kartu", tagCash:"Len hotovosť", tagPayUnknown:"Platba neuvedená", tagOpen:"Teraz otvorené",
+  tagClosed:"Teraz zatvorené", tagTemp:"Dočasne zatvorené", nav:"Navigovať", inMaps:"V Mapách",
+  emptyFilt:"Filtrom nevyhovuje žiadny z {n} nájdených podnikov. Uvoľni filtre alebo načítaj ďalšie.",
+  rRating:"Hodnotenie", rCount:"Počet hodnotení", rPrice:"Cena", rPay:"Platba", rOpen:"Teraz otvorené", yes:"Áno", no:"Nie",
+  rDist:"Vzdialenosť", rType:"Typ", rAddr:"Adresa", notListedF:"neuvedená", payNotListed:"Neuvedená",
+  open:"Otvorené", closed:"Zatvorené", nonstop:"nonstop", closesAt:"zatvára o {t}", opensAt:"otvára o {t}",
+  opensTomorrow:"otvára zajtra o {t}", opensDay:"otvára {d} o {t}", today:"dnes",
+  days:["Pondelok","Utorok","Streda","Štvrtok","Piatok","Sobota","Nedeľa"],
+  daysIn:["v nedeľu","v pondelok","v utorok","v stredu","vo štvrtok","v piatok","v sobotu"],
+  call:"Zavolať", web:"Web podniku", noDetails:"Podrobnosti Google pri tomto podniku nemá. Viac nájdeš cez V Mapách.",
+  reviewer:"Návštevník", starsAria:"{n} z 5 hviezdičiek", fullReview:"celá recenzia v Mapách",
+  errKey:"Kľúč nie je platný. Skontroluj ho v nastaveniach (ozubené koliesko vpravo hore).",
+  errRef:"Kľúč je obmedzený na inú webovú adresu. V Google Cloud skontroluj obmedzenie Websites pri kľúči.",
+  errBilling:"Google vyhľadávanie zastavil, lebo projekt nemá aktívne fakturovanie (napríklad skončila skúšobná verzia). Nič sa ti neúčtuje, appka len nebude hľadať.",
+  errDisabled:"V Google Cloud nie je zapnutá služba Places API (New). Zapni ju a skús to o pár minút znova.",
+  errBlocked:"Kľúč nemá povolenú službu Places API (New). Pridaj ju v obmedzeniach kľúča.",
+  err429:"Google dočasne odmietol vyhľadávanie, lebo bol dosiahnutý limit. Skús to neskôr.",
+  errGeneric:"Vyhľadávanie zlyhalo ({s}).", errFailed:"Vyhľadávanie zlyhalo.",
+  needKey:"Najprv vlož svoj Google kľúč v nastaveniach.", needCity:"Napíš mesto, v ktorom chceš hľadať.", locating:"Zisťujem polohu…",
+  geoDenied:"Appka nemá povolenú polohu. Povoľ ju, keď sa iPhone opýta, alebo v Nastaveniach → Súkromie a bezpečnosť → Polohové služby. Prípadne prepni na režim V meste.",
+  geoFail:"Polohu sa nepodarilo zistiť. Skús to znova vonku alebo prepni na režim V meste.",
+  limitHit:"Limit {l} vyhľadávaní pre tento telefón je na tento mesiac vyčerpaný. Obnoví sa 1. dňa v mesiaci približne o 9:00. Filtre na už nájdené podniky fungujú ďalej.",
+  searching:"Hľadám…", netErr:"Nepodarilo sa spojiť so službou Google. Skontroluj pripojenie na internet.",
+  noBrand:"V tejto oblasti sa nenašla žiadna pobočka {b}. Skús väčší okruh alebo iné mesto.",
+  nothing:"Nič sa nenašlo. Skús inú kategóriu, väčší okruh alebo iné mesto.",
+  found:"Nájdené podniky: {n}.", foundMore:"Nájdené podniky: {n}. Ďalšie môžeš načítať dole.",
+  startKey:"Na začiatok vlož svoj Google kľúč. Nastavenia otvoríš cez ozubené koliesko vpravo hore.",
+  startReady:"Vyber okolie alebo mesto, čo chceš jesť, a ťukni na Hľadať.",
+  langNote:"Názvy typov podnikov a recenzie od Google sa zmenia pri ďalšom hľadaní."
+},
+cs:{
+  title:"Kam na jídlo", settings:"Nastavení", searchAria:"Vyhledávání", near:"V okolí", city:"Ve městě",
+  cityPh:"Např. Brno, Praha, Ostrava", search:"Hledat", filters:"Filtry a řazení", filtersActive:"Filtry a řazení (aktivní: {n})",
+  fRating:"Hodnocení", fPrice:"Cena", fPay:"Platba", fOpen:"Jen nyní otevřené", fHide:"Skrýt podniky bez údaje o ceně nebo platbě",
+  sortLbl:"Řadit", sortBest:"Doporučené (hodnocení i cena)", sortRating:"Nejlépe hodnocené", sortCheap:"Nejlevnější",
+  sortNear:"Nejbližší", sortReviews:"Nejvíce hodnocení", more:"Načíst dalších 20", attribution:"Údaje o podnicích: Google Maps",
+  usageLine:"Vyhledávání tento měsíc: {u} z {l}", usageBig:"{u} z {l}", cmpClear:"Zrušit", compare:"Porovnat",
+  cmpOne:"Vybrán 1 podnik, přidej další", cmpMany:"Vybrány {n} podniky", cmpMax:"Porovnat můžeš najednou nejvýše 3 podniky.",
+  cmpTitle:"Porovnání", close:"Zavřít", done:"Hotovo", lang:"Jazyk", gKey:"Google klíč",
+  keyNote:"Klíč se uloží jen v tomto zařízení. Do kódu aplikace ani nikam jinam se neposílá, používá se jen při vyhledávání přes Google.",
+  keyPh:"Vlož klíč začínající AIza…", saveKey:"Uložit klíč", show:"Zobrazit", hide:"Skrýt", delKey:"Smazat klíč",
+  keyEnds:"Uložený klíč končí na …{k}.", keyNone:"Není uložen žádný klíč.", keyEmpty:"Nejdřív vlož klíč do pole.",
+  gmApp:"Otevírat přímo v aplikaci Google Mapy", gmNote:"Pokud aplikaci Google Mapy nemáš, vypni tuto možnost a otevře se webová verze.",
+  usageTitle:"Vyhledávání tento měsíc",
+  usageNote:"Google dává 1 000 vyhledávání měsíčně zdarma. Aplikace jich spustí nejvýše tolik, kolik je nastavený limit pro tento telefon, a pak do konce měsíce přestane hledat. Počítadlo se vynuluje 1. dne v měsíci přibližně v 9:00 ráno, stejně jako u Google. Každé „Načíst dalších 20“ je také jedno vyhledávání. Stejné hledání zopakované během jednoho spuštění aplikace se nepočítá.",
+  limitTitle:"Limit pro tento telefon",
+  limitNote:"Pokud aplikaci se stejným klíčem používá více telefonů, součet jejich limitů nesmí být vyšší než 900. U dvou telefonů nastav například 450 a 450.",
+  saveLimit:"Uložit limit",
+  counterNote:"Počítadlo je uložené jen v tomto telefonu. Pokud by se smazalo (například po odstranění aplikace z plochy), podívej se na skutečný počet v Google Cloud a nastav ho tady:",
+  setCounter:"Nastavit počítadlo", recentLbl:"Naposledy:", recentHint:"naposledy", clear:"Smazat",
+  cityPicked:"Město: {c}. Klepni na Hledat.", ratingAll:"Vše", pay_any:"Nezáleží", pay_card:"Kartou", pay_cash:"Jen hotovost",
+  priceNames:["Zdarma","Levné","Střední","Drahé","Luxusní"], priceUnknown:"cena neuvedena", perPerson:"{c} na osobu",
+  from:"od {a}", range:"{a}\u00a0až\u00a0{b}", reviewsShort:"hodn.", noRating:"bez<br>hodn.",
+  tagCard:"Berou kartu", tagCash:"Jen hotovost", tagPayUnknown:"Platba neuvedena", tagOpen:"Nyní otevřeno",
+  tagClosed:"Nyní zavřeno", tagTemp:"Dočasně zavřeno", nav:"Navigovat", inMaps:"V Mapách",
+  emptyFilt:"Filtrům nevyhovuje žádný z {n} nalezených podniků. Uvolni filtry nebo načti další.",
+  rRating:"Hodnocení", rCount:"Počet hodnocení", rPrice:"Cena", rPay:"Platba", rOpen:"Nyní otevřeno", yes:"Ano", no:"Ne",
+  rDist:"Vzdálenost", rType:"Typ", rAddr:"Adresa", notListedF:"neuvedena", payNotListed:"Neuvedena",
+  open:"Otevřeno", closed:"Zavřeno", nonstop:"nonstop", closesAt:"zavírá v {t}", opensAt:"otevírá v {t}",
+  opensTomorrow:"otevírá zítra v {t}", opensDay:"otevírá {d} v {t}", today:"dnes",
+  days:["Pondělí","Úterý","Středa","Čtvrtek","Pátek","Sobota","Neděle"],
+  daysIn:["v neděli","v pondělí","v úterý","ve středu","ve čtvrtek","v pátek","v sobotu"],
+  call:"Zavolat", web:"Web podniku", noDetails:"Podrobnosti Google u tohoto podniku nemá. Více najdeš přes V Mapách.",
+  reviewer:"Návštěvník", starsAria:"{n} z 5 hvězdiček", fullReview:"celá recenze v Mapách",
+  errKey:"Klíč není platný. Zkontroluj ho v nastavení (ozubené kolečko vpravo nahoře).",
+  errRef:"Klíč je omezen na jinou webovou adresu. V Google Cloud zkontroluj omezení Websites u klíče.",
+  errBilling:"Google vyhledávání zastavil, protože projekt nemá aktivní fakturaci (například skončila zkušební verze). Nic se ti neúčtuje, aplikace jen nebude hledat.",
+  errDisabled:"V Google Cloud není zapnutá služba Places API (New). Zapni ji a zkus to za pár minut znovu.",
+  errBlocked:"Klíč nemá povolenou službu Places API (New). Přidej ji v omezeních klíče.",
+  err429:"Google dočasně odmítl vyhledávání, protože byl dosažen limit. Zkus to později.",
+  errGeneric:"Vyhledávání selhalo ({s}).", errFailed:"Vyhledávání selhalo.",
+  needKey:"Nejdřív vlož svůj Google klíč v nastavení.", needCity:"Napiš město, ve kterém chceš hledat.", locating:"Zjišťuji polohu…",
+  geoDenied:"Aplikace nemá povolenou polohu. Povol ji, až se iPhone zeptá, nebo v Nastavení → Soukromí a zabezpečení → Polohové služby. Případně přepni na režim Ve městě.",
+  geoFail:"Polohu se nepodařilo zjistit. Zkus to znovu venku nebo přepni na režim Ve městě.",
+  limitHit:"Limit {l} vyhledávání pro tento telefon je na tento měsíc vyčerpán. Obnoví se 1. dne v měsíci přibližně v 9:00. Filtry na už nalezené podniky fungují dál.",
+  searching:"Hledám…", netErr:"Nepodařilo se spojit se službou Google. Zkontroluj připojení k internetu.",
+  noBrand:"V této oblasti se nenašla žádná pobočka {b}. Zkus větší okruh nebo jiné město.",
+  nothing:"Nic se nenašlo. Zkus jinou kategorii, větší okruh nebo jiné město.",
+  found:"Nalezené podniky: {n}.", foundMore:"Nalezené podniky: {n}. Další můžeš načíst dole.",
+  startKey:"Nejdřív vlož svůj Google klíč. Nastavení otevřeš přes ozubené kolečko vpravo nahoře.",
+  startReady:"Vyber okolí nebo město, co chceš jíst, a klepni na Hledat.",
+  langNote:"Názvy typů podniků a recenze od Google se změní při dalším hledání."
+},
+en:{
+  title:"Where to Eat", settings:"Settings", searchAria:"Search", near:"Nearby", city:"In a city",
+  cityPh:"E.g. Prague, Vienna, Brno", search:"Search", filters:"Filters & sorting", filtersActive:"Filters & sorting ({n} active)",
+  fRating:"Rating", fPrice:"Price", fPay:"Payment", fOpen:"Open now only", fHide:"Hide places without price or payment info",
+  sortLbl:"Sort by", sortBest:"Recommended (rating and price)", sortRating:"Highest rated", sortCheap:"Cheapest",
+  sortNear:"Nearest", sortReviews:"Most reviews", more:"Load 20 more", attribution:"Place data: Google Maps",
+  usageLine:"Searches this month: {u} of {l}", usageBig:"{u} of {l}", cmpClear:"Clear", compare:"Compare",
+  cmpOne:"1 place selected, add another", cmpMany:"{n} places selected", cmpMax:"You can compare up to 3 places at once.",
+  cmpTitle:"Comparison", close:"Close", done:"Done", lang:"Language", gKey:"Google key",
+  keyNote:"The key is stored only on this device. It is never sent anywhere except to Google when you search.",
+  keyPh:"Paste the key starting with AIza…", saveKey:"Save key", show:"Show", hide:"Hide", delKey:"Delete key",
+  keyEnds:"Saved key ends with …{k}.", keyNone:"No key saved.", keyEmpty:"Paste the key into the field first.",
+  gmApp:"Open directly in the Google Maps app", gmNote:"If you don't have the Google Maps app, turn this off to use the web version.",
+  usageTitle:"Searches this month",
+  usageNote:"Google gives 1,000 searches per month for free. The app runs at most as many as the limit set for this phone, then stops searching until the end of the month. The counter resets on the 1st of the month at about 9:00 a.m., just like at Google. Each “Load 20 more” also counts as one search. Repeating the same search while the app is open doesn't count.",
+  limitTitle:"Limit for this phone",
+  limitNote:"If several phones use the app with the same key, their limits must add up to no more than 900. For two phones, set e.g. 450 and 450.",
+  saveLimit:"Save limit",
+  counterNote:"The counter is stored only on this phone. If it gets erased (e.g. after removing the app from the home screen), check the real count in Google Cloud and set it here:",
+  setCounter:"Set counter", recentLbl:"Recent:", recentHint:"recent", clear:"Clear",
+  cityPicked:"City: {c}. Tap Search.", ratingAll:"All", pay_any:"Any", pay_card:"Card", pay_cash:"Cash only",
+  priceNames:["Free","Cheap","Moderate","Expensive","Very expensive"], priceUnknown:"price not listed", perPerson:"{c} per person",
+  from:"from {a}", range:"{a}–{b}", reviewsShort:"reviews", noRating:"no<br>rating",
+  tagCard:"Card accepted", tagCash:"Cash only", tagPayUnknown:"Payment not listed", tagOpen:"Open now",
+  tagClosed:"Closed now", tagTemp:"Temporarily closed", nav:"Directions", inMaps:"In Maps",
+  emptyFilt:"None of the {n} places found match your filters. Loosen the filters or load more.",
+  rRating:"Rating", rCount:"Reviews", rPrice:"Price", rPay:"Payment", rOpen:"Open now", yes:"Yes", no:"No",
+  rDist:"Distance", rType:"Type", rAddr:"Address", notListedF:"not listed", payNotListed:"Not listed",
+  open:"Open", closed:"Closed", nonstop:"24 hours", closesAt:"closes at {t}", opensAt:"opens at {t}",
+  opensTomorrow:"opens tomorrow at {t}", opensDay:"opens {d} at {t}", today:"today",
+  days:["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+  daysIn:["on Sunday","on Monday","on Tuesday","on Wednesday","on Thursday","on Friday","on Saturday"],
+  call:"Call", web:"Website", noDetails:"Google has no details for this place. See more via In Maps.",
+  reviewer:"Visitor", starsAria:"{n} of 5 stars", fullReview:"full review in Maps",
+  errKey:"The key is not valid. Check it in Settings (gear icon, top right).",
+  errRef:"The key is restricted to a different website. Check the Websites restriction on the key in Google Cloud.",
+  errBilling:"Google stopped searching because the project has no active billing (e.g. the free trial ended). You are not charged; the app just won't search.",
+  errDisabled:"Places API (New) is not enabled in Google Cloud. Enable it and try again in a few minutes.",
+  errBlocked:"The key isn't allowed to use Places API (New). Add it in the key restrictions.",
+  err429:"Google temporarily refused the search because a limit was reached. Try again later.",
+  errGeneric:"Search failed ({s}).", errFailed:"Search failed.",
+  needKey:"First paste your Google key in Settings.", needCity:"Type the city you want to search in.", locating:"Getting your location…",
+  geoDenied:"The app doesn't have location access. Allow it when your iPhone asks, or in Settings → Privacy & Security → Location Services. Or switch to In a city.",
+  geoFail:"Couldn't get your location. Try again outside or switch to In a city.",
+  limitHit:"This phone's limit of {l} searches for this month is used up. It resets on the 1st of the month at about 9:00. Filters on places already found still work.",
+  searching:"Searching…", netErr:"Couldn't connect to Google. Check your internet connection.",
+  noBrand:"No {b} found in this area. Try a larger radius or another city.",
+  nothing:"Nothing found. Try another category, a larger radius or another city.",
+  found:"Places found: {n}.", foundMore:"Places found: {n}. You can load more below.",
+  startKey:"To start, paste your Google key. Open Settings with the gear icon, top right.",
+  startReady:"Choose nearby or a city and what you want to eat, then tap Search.",
+  langNote:"Place types and reviews from Google switch language with your next search."
+}};
+function t(key, vars){
+  const L = T[prefs.lang] || T.sk;
+  let s = key in L ? L[key] : T.sk[key];
+  if (typeof s === "string" && vars) s = s.replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m);
+  return s;
+}
+const LOC = () => (LANGS[prefs.lang] || LANGS.sk).locale;
+/* Preklady kategórií: id → [čeština, angličtina]. Značky reťazcov sa neprekladajú. */
+const CAT_I18N = {
+  kuchyna:["Kuchyně","Cuisine"], all:["Vše","All"], sk:["Slovenská","Slovak"], cz:["Česká","Czech"], it:["Italská","Italian"],
+  fr:["Francouzská","French"], gr:["Řecká","Greek"], tr:["Turecká","Turkish"], asia:["Asijská","Asian"], viet:["Vietnamská","Vietnamese"],
+  cn:["Čínská","Chinese"], jp:["Japonská","Japanese"], kr:["Korejská","Korean"], thai:["Thajská","Thai"], in:["Indická","Indian"],
+  mx:["Mexická","Mexican"], us:["Americká","American"], fish:["Ryby a mořské plody","Fish & seafood"], veg:["Vegetariánská a veganská","Vegetarian & vegan"],
+  jedla:["Jídla","Dishes"], burger:["Burger","Burgers"], "pizza-nea":["Neapolská pizza","Neapolitan pizza"], tacos:["Tacos a burrito","Tacos & burritos"],
+  schnitzel:["Řízek","Schnitzel"], halusky:["Halušky","Halušky"], wings:["Křidélka","Chicken wings"], pasta:["Těstoviny","Pasta"],
+  sladke:["Kavárny a sladké","Cafés & sweets"], cafe:["Kavárna","Café"], specialty:["Výběrová kavárna","Specialty coffee"],
+  cukraren:["Cukrárna","Pastry shop"], pekaren:["Pekárna","Bakery"], zmrzlina:["Zmrzlina","Ice cream"], brunch:["Snídaně a brunch","Breakfast & brunch"],
+  caj:["Čajovna","Tea house"], fastfood:["Rychlé občerstvení","Fast food"], "ff-all":["Vše","All"]
+};
+function catLabel(x){
+  if (prefs.lang === "sk") return x.label;
+  const tr = CAT_I18N[x.id]; return tr ? tr[prefs.lang === "cs" ? 0 : 1] : x.label;
+}
+/* Názvy európskych miest v češtine a angličtine (slovenský názov → [cs, en]) */
+const CITY_I18N = {
+  "Praha":["Praha","Prague"], "Viedeň":["Vídeň","Vienna"], "Budapešť":["Budapešť","Budapest"], "Krakov":["Krakov","Kraków"],
+  "Varšava":["Varšava","Warsaw"], "Vroclav":["Vratislav","Wrocław"], "Gdansk":["Gdaňsk","Gdańsk"], "Katovice":["Katovice","Katowice"],
+  "Berlín":["Berlín","Berlin"], "Mníchov":["Mnichov","Munich"], "Drážďany":["Drážďany","Dresden"], "Lipsko":["Lipsko","Leipzig"],
+  "Norimberg":["Norimberk","Nuremberg"], "Frankfurt nad Mohanom":["Frankfurt nad Mohanem","Frankfurt"], "Kolín nad Rýnom":["Kolín nad Rýnem","Cologne"],
+  "Ľubľana":["Lublaň","Ljubljana"], "Záhreb":["Záhřeb","Zagreb"], "Dubrovník":["Dubrovník","Dubrovnik"], "Belehrad":["Bělehrad","Belgrade"],
+  "Bukurešť":["Bukurešť","Bucharest"], "Atény":["Atény","Athens"], "Solún":["Soluň","Thessaloniki"], "Rím":["Řím","Rome"],
+  "Miláno":["Milán","Milan"], "Benátky":["Benátky","Venice"], "Florencia":["Florencie","Florence"], "Neapol":["Neapol","Naples"],
+  "Turín":["Turín","Turin"], "Paríž":["Paříž","Paris"], "Londýn":["Londýn","London"], "Brusel":["Brusel","Brussels"],
+  "Bruggy":["Bruggy","Bruges"], "Luxemburg":["Lucemburk","Luxembourg"], "Ženeva":["Ženeva","Geneva"], "Sevilla":["Sevilla","Seville"],
+  "Lisabon":["Lisabon","Lisbon"], "Kodaň":["Kodaň","Copenhagen"], "Štokholm":["Stockholm","Stockholm"], "Istanbul":["Istanbul","Istanbul"],
+  "Zürich":["Curych","Zurich"], "Salzburg":["Salcburk","Salzburg"], "Linz":["Linec","Linz"], "Graz":["Štýrský Hradec","Graz"]
+};
+function cityLabel(name){
+  if (prefs.lang === "sk") return name;
+  const tr = CITY_I18N[name]; return tr ? tr[prefs.lang === "cs" ? 0 : 1] : name;
+}
 
 /* ---------- Mestá pre návrhy (bez Google, nič nestoja) ---------- */
 const CITIES = [
@@ -455,8 +666,8 @@ const CITIES = [
   "Valencia","Sevilla|Seville","Málaga","Palma de Mallorca","Lisabon|Lisbon|Lisboa","Porto","Kodaň|Copenhagen|København",
   "Štokholm|Stockholm","Oslo","Helsinki","Tallinn","Riga","Vilnius","Istanbul|İstanbul","Valletta"
 ];
-const normTxt = t => (t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-const CITY_INDEX = CITIES.map(e => { const parts = e.split("|"); return {name:parts[0], alias:parts.slice(1), keys:parts.map(normTxt)}; });
+const normTxt = v => (v || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+const CITY_INDEX = CITIES.map(e => { const parts = e.split("|"); const tr = CITY_I18N[parts[0]] || []; return {name:parts[0], alias:parts.slice(1), keys:[...parts, ...tr].map(normTxt)}; });
 function citySuggestions(q){
   const n = normTxt(q);
   if (!n) return [];
@@ -478,7 +689,9 @@ const store = {
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
   del(k){ try { localStorage.removeItem(k); } catch {} }
 };
+const HAD_PREFS = store.get("kj_prefs", null) !== null;
 const prefs = Object.assign({
+  lang: HAD_PREFS ? "sk" : detectLang(),
   mode:"near", radius:3000, city:"", cuisine:"all", group:"kuchyna",
   minRating:0, prices:[], pay:"any", openNow:false, hideUnknown:false, sort:"best", gmApp:true, monthLimit:900,
   recentCities:[]
@@ -503,8 +716,8 @@ function usage(){
 function addUsage(){ const u = usage(); u.monthCount++; store.set("kj_usage", u); renderUsage(); }
 function renderUsage(){
   const u = usage();
-  $("#usageLine").textContent = `Vyhľadávania tento mesiac: ${u.monthCount} z ${LIMIT()}`;
-  $("#usageBig").textContent = `${u.monthCount} z ${LIMIT()}`;
+  $("#usageLine").textContent = t("usageLine", {u:u.monthCount, l:LIMIT()});
+  $("#usageBig").textContent = t("usageBig", {u:u.monthCount, l:LIMIT()});
   $("#limitInput").value = LIMIT();
   $("#usageInput").value = u.monthCount;
 }
@@ -512,8 +725,12 @@ function renderUsage(){
 /* ---------- Pomocníci ---------- */
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const nf1 = new Intl.NumberFormat("sk-SK",{minimumFractionDigits:1,maximumFractionDigits:1});
-const nf0 = new Intl.NumberFormat("sk-SK");
+let nf1, nf0;
+function setFormats(){
+  nf1 = new Intl.NumberFormat(LOC(),{minimumFractionDigits:1,maximumFractionDigits:1});
+  nf0 = new Intl.NumberFormat(LOC());
+}
+setFormats();
 function setStatus(msg, err=false){ const el = $("#status"); el.textContent = msg; el.classList.toggle("err", err); }
 function fmtDist(m){ return m < 1000 ? `${Math.round(m/10)*10} m` : `${nf1.format(m/1000)} km`; }
 function haversine(a, b){
@@ -527,13 +744,14 @@ function haversine(a, b){
 const CUR_CACHE = {};
 function curSymbol(code){
   if (!code) return "";
-  if (CUR_CACHE[code]) return CUR_CACHE[code];
+  const ck = prefs.lang + code;
+  if (CUR_CACHE[ck]) return CUR_CACHE[ck];
   let sym = code;
   try {
-    sym = new Intl.NumberFormat("sk-SK",{style:"currency",currency:code,currencyDisplay:"narrowSymbol"})
+    sym = new Intl.NumberFormat(LOC(),{style:"currency",currency:code,currencyDisplay:"narrowSymbol"})
       .formatToParts(1).find(x => x.type === "currency")?.value || code;
   } catch {}
-  return CUR_CACHE[code] = sym;
+  return CUR_CACHE[ck] = sym;
 }
 function money(m){
   if (!m || !m.currencyCode) return "";
@@ -541,36 +759,34 @@ function money(m){
 }
 function rangeText(r){
   if (!r || !r.startPrice) return "";
-  if (!r.endPrice) return `od\u00a0${money(r.startPrice)}`;
+  if (!r.endPrice) return t("from", {a:money(r.startPrice)}).replace(" ", "\u00a0");
   const same = r.startPrice.currencyCode === r.endPrice.currencyCode;
-  return same ? `${nf0.format(Number(r.startPrice.units||0))}\u00a0až\u00a0${money(r.endPrice)}` : `${money(r.startPrice)}\u00a0až\u00a0${money(r.endPrice)}`;
+  return same ? t("range", {a:nf0.format(Number(r.startPrice.units||0)), b:money(r.endPrice)}) : t("range", {a:money(r.startPrice), b:money(r.endPrice)});
 }
 function priceIdx(p){ return p.priceLevel in PRICE_IDX ? PRICE_IDX[p.priceLevel] : null; }
 function priceText(p){
   const r = p.priceRange, parts = [];
   const i = priceIdx(p);
-  if (i !== null) parts.push(PRICE_NAMES[i]);
+  if (i !== null) parts.push(priceName(i));
   if (r && r.startPrice) parts.push(rangeText(r));
   return parts.join(", ");
 }
 function priceBlock(p){
   const i = priceIdx(p), r = p.priceRange;
-  if (i === null && !(r && r.startPrice)) return `<div class="price"><span class="unk">cena neuvedená</span></div>`;
+  if (i === null && !(r && r.startPrice)) return `<div class="price"><span class="unk">${t("priceUnknown")}</span></div>`;
   let html = `<div class="price">`;
   if (i !== null && i > 0){
     html += `<span class="dots" aria-hidden="true">${[1,2,3,4].map(n => `<span class="dot${n <= i ? " on" : ""}"></span>`).join("")}</span>`;
-    html += `<span class="plab">${PRICE_NAMES[i]}</span>`;
-  } else if (i === 0) html += `<span class="plab">${PRICE_NAMES[0]}</span>`;
+    html += `<span class="plab">${priceName(i)}</span>`;
+  } else if (i === 0) html += `<span class="plab">${priceName(0)}</span>`;
   if (r && r.startPrice){
     const cur = curSymbol(r.startPrice.currencyCode);
     const a = nf0.format(Number(r.startPrice.units||0));
     const b = r.endPrice ? nf0.format(Number(r.endPrice.units||0)) : null;
-    html += `<span class="prng">${b ? `${a}–${b}` : `od ${a}`}</span><span class="pper">${esc(cur)} na osobu</span>`;
+    html += `<span class="prng">${b ? `${a}–${b}` : t("from", {a})}</span><span class="pper">${esc(t("perPerson", {c:cur}))}</span>`;
   }
   return html + `</div>`;
 }
-const DAY_NAMES = ["Pondelok","Utorok","Streda","Štvrtok","Piatok","Sobota","Nedeľa"];
-const DAY_IN = ["v nedeľu","v pondelok","v utorok","v stredu","vo štvrtok","v piatok","v sobotu"]; // podľa Google: 0 = nedeľa
 const hhmm = (h, m) => `${h}:${String(m).padStart(2, "0")}`;
 function placeNow(p){
   // čas v mieste podniku (dôležité pri hľadaní v inom časovom pásme)
@@ -582,16 +798,16 @@ function openStatus(p){
   const per = oh.periods || [];
   const now = placeNow(p);
   const nowW = now.getUTCDay()*1440 + now.getUTCHours()*60 + now.getUTCMinutes();
-  const W = 10080, mins = t => t.day*1440 + (t.hour||0)*60 + (t.minute||0);
-  if (per.length === 1 && per[0].open && !per[0].close) return {open:true, text:"Otvorené", sub:"nonstop"};
+  const W = 10080, mins = x => x.day*1440 + (x.hour||0)*60 + (x.minute||0);
+  if (per.length === 1 && per[0].open && !per[0].close) return {open:true, text:t("open"), sub:t("nonstop")};
   if (oh.openNow === true){
     for (const x of per){
       if (!x.open || !x.close) continue;
       let o = mins(x.open), c = mins(x.close); if (c <= o) c += W;
       if ((nowW >= o && nowW < c) || (nowW + W >= o && nowW + W < c))
-        return {open:true, text:"Otvorené", sub:`zatvára o ${hhmm(x.close.hour||0, x.close.minute||0)}`};
+        return {open:true, text:t("open"), sub:t("closesAt", {t:hhmm(x.close.hour||0, x.close.minute||0)})};
     }
-    return {open:true, text:"Otvorené", sub:""};
+    return {open:true, text:t("open"), sub:""};
   }
   if (oh.openNow === false){
     let best = null;
@@ -600,66 +816,66 @@ function openStatus(p){
       const d = ((mins(x.open) - nowW) % W + W) % W;
       if (d > 0 && (!best || d < best.d)) best = {d, t:x.open};
     }
-    if (!best) return {open:false, text:"Zatvorené", sub:""};
+    if (!best) return {open:false, text:t("closed"), sub:""};
     const dayDiff = (best.t.day - now.getUTCDay() + 7) % 7;
-    const when = dayDiff === 0 && best.d < 1440 ? "" : dayDiff === 1 ? "zajtra " : `${DAY_IN[best.t.day]} `;
-    return {open:false, text:"Zatvorené", sub:`otvára ${when}o ${hhmm(best.t.hour||0, best.t.minute||0)}`};
+    const tm = hhmm(best.t.hour||0, best.t.minute||0);
+    const sub = dayDiff === 0 && best.d < 1440 ? t("opensAt", {t:tm}) : dayDiff === 1 ? t("opensTomorrow", {t:tm}) : t("opensDay", {d:t("daysIn")[best.t.day], t:tm});
+    return {open:false, text:t("closed"), sub};
   }
   return null;
 }
 /* ---------- Automatický popis z vlastností podniku (údaje z Google Máp, bez AI) ---------- */
-function joinSk(arr, last = "a"){
+const DESC = {
+  sk:{and:"a", also:"aj", type:"Podnik", space:{outdoorSeating:"terasou", liveMusic:"živou hudbou"}, withSpace:"{type} s {list}.",
+      meals:{servesBreakfast:"raňajky", servesBrunch:"brunch", servesLunch:"obedy", servesDinner:"večere"}, mealsS:"Podáva {list}.",
+      menu:{servesVegetarianFood:"vegetariánske jedlá", servesDessert:"dezerty", servesCoffee:"kávu", servesBeer:"pivo", servesWine:"víno", servesCocktails:"koktaily"}, menuS:"V ponuke má {list}.",
+      fit:{goodForChildren:"pre deti", goodForGroups:"pre väčšie skupiny", goodForWatchingSports:"na sledovanie športu"}, fitS:"Hodí sa {list}.",
+      kids:"Má detské menu.", dogs:"Psy sú vítané.", wheel:"Má bezbariérový vstup.",
+      serv:{reservable:"rezerváciu", takeout:"jedlo so sebou", delivery:"rozvoz"}, servS:"Ponúka {list}.",
+      freePark:"Parkovanie zadarmo v blízkosti.", paidPark:"Platené parkovanie v blízkosti."},
+  cs:{and:"a", also:"i", type:"Podnik", space:{outdoorSeating:"terasou", liveMusic:"živou hudbou"}, withSpace:"{type} s {list}.",
+      meals:{servesBreakfast:"snídaně", servesBrunch:"brunch", servesLunch:"obědy", servesDinner:"večeře"}, mealsS:"Podává {list}.",
+      menu:{servesVegetarianFood:"vegetariánská jídla", servesDessert:"dezerty", servesCoffee:"kávu", servesBeer:"pivo", servesWine:"víno", servesCocktails:"koktejly"}, menuS:"V nabídce má {list}.",
+      fit:{goodForChildren:"pro děti", goodForGroups:"pro větší skupiny", goodForWatchingSports:"na sledování sportu"}, fitS:"Hodí se {list}.",
+      kids:"Má dětské menu.", dogs:"Psi jsou vítáni.", wheel:"Má bezbariérový vstup.",
+      serv:{reservable:"rezervace", takeout:"jídlo s sebou", delivery:"rozvoz"}, servS:"Nabízí {list}.",
+      freePark:"Parkování zdarma v okolí.", paidPark:"Placené parkování v okolí."},
+  en:{and:"and", also:"and", type:"Place", space:{outdoorSeating:"outdoor seating", liveMusic:"live music"}, withSpace:"{type} with {list}.",
+      meals:{servesBreakfast:"breakfast", servesBrunch:"brunch", servesLunch:"lunch", servesDinner:"dinner"}, mealsS:"Serves {list}.",
+      menu:{servesVegetarianFood:"vegetarian dishes", servesDessert:"desserts", servesCoffee:"coffee", servesBeer:"beer", servesWine:"wine", servesCocktails:"cocktails"}, menuS:"Offers {list}.",
+      fit:{goodForChildren:"kids", goodForGroups:"larger groups", goodForWatchingSports:"watching sports"}, fitS:"Good for {list}.",
+      kids:"Has a kids' menu.", dogs:"Dogs welcome.", wheel:"Wheelchair-accessible entrance.",
+      serv:{reservable:"reservations", takeout:"takeout", delivery:"delivery"}, servS:"{List} available.",
+      freePark:"Free parking nearby.", paidPark:"Paid parking nearby."}
+};
+function joinList(arr, last){
   if (arr.length <= 1) return arr.join("");
   return arr.slice(0, -1).join(", ") + ` ${last} ` + arr[arr.length - 1];
 }
 function autoDescription(p){
+  const D = DESC[prefs.lang] || DESC.sk;
   let facts = 0;
   const out = [];
-  const type = p.primaryTypeDisplayName?.text || "Podnik";
-  const space = [];
-  if (p.outdoorSeating) space.push("terasou");
-  if (p.liveMusic) space.push("živou hudbou");
-  facts += space.length;
-  out.push(space.length ? `${type} s ${joinSk(space)}.` : null);
+  const pick = map => Object.keys(map).filter(k => p[k]).map(k => map[k]);
+  const fill = (tpl, list) => tpl.replace("{list}", list).replace("{List}", list.charAt(0).toUpperCase() + list.slice(1));
+  const type = p.primaryTypeDisplayName?.text || D.type;
 
-  const meals = [];
-  if (p.servesBreakfast) meals.push("raňajky");
-  if (p.servesBrunch) meals.push("brunch");
-  if (p.servesLunch) meals.push("obedy");
-  if (p.servesDinner) meals.push("večere");
-  facts += meals.length;
-  if (meals.length) out.push(`Podáva ${joinSk(meals, meals.length > 1 ? "aj" : "a")}.`);
-
-  const menu = [];
-  if (p.servesVegetarianFood) menu.push("vegetariánske jedlá");
-  if (p.servesDessert) menu.push("dezerty");
-  if (p.servesCoffee) menu.push("kávu");
-  if (p.servesBeer) menu.push("pivo");
-  if (p.servesWine) menu.push("víno");
-  if (p.servesCocktails) menu.push("koktaily");
-  facts += menu.length;
-  if (menu.length) out.push(`V ponuke má ${joinSk(menu)}.`);
-
-  const fit = [];
-  if (p.goodForChildren) fit.push("pre deti");
-  if (p.goodForGroups) fit.push("pre väčšie skupiny");
-  if (p.goodForWatchingSports) fit.push("na sledovanie športu");
-  facts += fit.length;
-  if (fit.length) out.push(`Hodí sa ${joinSk(fit)}.`);
-  if (p.menuForChildren){ out.push("Má detské menu."); facts++; }
-  if (p.allowsDogs){ out.push("Psy sú vítané."); facts++; }
-  if (p.accessibilityOptions?.wheelchairAccessibleEntrance){ out.push("Má bezbariérový vstup."); facts++; }
-
-  const serv = [];
-  if (p.reservable) serv.push("rezerváciu");
-  if (p.takeout) serv.push("jedlo so sebou");
-  if (p.delivery) serv.push("rozvoz");
-  facts += serv.length;
-  if (serv.length) out.push(`Ponúka ${joinSk(serv)}.`);
-
+  const space = pick(D.space); facts += space.length;
+  out.push(space.length ? D.withSpace.replace("{type}", type).replace("{list}", joinList(space, D.and)) : null);
+  const meals = pick(D.meals); facts += meals.length;
+  if (meals.length) out.push(fill(D.mealsS, joinList(meals, meals.length > 1 ? D.also : D.and)));
+  const menu = pick(D.menu); facts += menu.length;
+  if (menu.length) out.push(fill(D.menuS, joinList(menu, D.and)));
+  const fit = pick(D.fit); facts += fit.length;
+  if (fit.length) out.push(fill(D.fitS, joinList(fit, D.and)));
+  if (p.menuForChildren){ out.push(D.kids); facts++; }
+  if (p.allowsDogs){ out.push(D.dogs); facts++; }
+  if (p.accessibilityOptions?.wheelchairAccessibleEntrance){ out.push(D.wheel); facts++; }
+  const serv = pick(D.serv); facts += serv.length;
+  if (serv.length) out.push(fill(D.servS, joinList(serv, D.and)));
   const pk = p.parkingOptions || {};
-  if (pk.freeParkingLot || pk.freeStreetParking || pk.freeGarageParking){ out.push("Parkovanie zadarmo v blízkosti."); facts++; }
-  else if (pk.paidParkingLot || pk.paidStreetParking || pk.paidGarageParking || pk.valetParking){ out.push("Platené parkovanie v blízkosti."); facts++; }
+  if (pk.freeParkingLot || pk.freeStreetParking || pk.freeGarageParking){ out.push(D.freePark); facts++; }
+  else if (pk.paidParkingLot || pk.paidStreetParking || pk.paidGarageParking || pk.valetParking){ out.push(D.paidPark); facts++; }
 
   if (facts < 2) return "";
   if (!out[0]) out[0] = `${type}.`;
@@ -671,16 +887,16 @@ function bestReview(p){
 }
 function reviewHtml(p){
   const r = bestReview(p); if (!r) return "";
-  let t = r.text.text.trim().replace(/\s+/g, " ");
-  const long = t.length > 240;
-  if (long) t = t.slice(0, 230).replace(/\s+\S*$/, "") + "…";
+  let txt = r.text.text.trim().replace(/\s+/g, " ");
+  const long = txt.length > 240;
+  if (long) txt = txt.slice(0, 230).replace(/\s+\S*$/, "") + "…";
   const a = r.authorAttribution || {};
-  const name = a.displayName || "Návštevník";
+  const name = a.displayName || t("reviewer");
   const stars = Math.max(0, Math.min(5, Math.round(r.rating || 0)));
   return `<figure class="review">
-    <div class="rv-stars" aria-label="${stars} z 5 hviezdičiek">${"★".repeat(stars)}<span>${"★".repeat(5 - stars)}</span></div>
-    <blockquote>${esc(t)}</blockquote>
-    <figcaption>${a.uri ? `<a href="${esc(a.uri)}" target="_blank" rel="noopener">${esc(name)}</a>` : esc(name)}${r.relativePublishTimeDescription ? `, ${esc(r.relativePublishTimeDescription)}` : ""}${long ? ` · <button type="button" class="linklike" data-detail="${esc(p.id)}">celá recenzia v Mapách</button>` : ""}</figcaption>
+    <div class="rv-stars" aria-label="${t("starsAria", {n:stars})}">${"★".repeat(stars)}<span>${"★".repeat(5 - stars)}</span></div>
+    <blockquote>${esc(txt)}</blockquote>
+    <figcaption>${a.uri ? `<a href="${esc(a.uri)}" target="_blank" rel="noopener">${esc(name)}</a>` : esc(name)}${r.relativePublishTimeDescription ? `, ${esc(r.relativePublishTimeDescription)}` : ""}${long ? ` · <button type="button" class="linklike" data-detail="${esc(p.id)}">${t("fullReview")}</button>` : ""}</figcaption>
   </figure>`;
 }
 function moreInfo(p){
@@ -694,11 +910,11 @@ function moreInfo(p){
     if (st) html += `<div class="oh-status ${st.open ? "is-open" : "is-closed"}"><span class="oh-dot"></span>${st.text}${st.sub ? `<span class="oh-sub">${esc(st.sub)}</span>` : ""}</div>`;
     if (days && days.length === 7){
       const idx = (placeNow(p).getUTCDay() + 6) % 7; // Google začína pondelkom
-      html += `<div class="oh-table">` + days.map((t, i) => {
-        const hours = t.replace(/^[^:]+:\s*/, "");
-        const closed = /zatvoren/i.test(hours);
+      html += `<div class="oh-table">` + days.map((line, i) => {
+        const hours = line.replace(/^[^:]+:\s*/, "");
+        const closed = /zatvoren|zavřen|closed/i.test(hours);
         const parts = hours.split(/,\s*/).map(esc).join("<br>");
-        return `<div class="oh-row${i === idx ? " today" : ""}"><span class="oh-day">${DAY_NAMES[i]}${i === idx ? `<span class="oh-today">dnes</span>` : ""}</span><span class="oh-time${closed ? " closed" : ""}">${parts}</span></div>`;
+        return `<div class="oh-row${i === idx ? " today" : ""}"><span class="oh-day">${t("days")[i]}${i === idx ? `<span class="oh-today">${t("today")}</span>` : ""}</span><span class="oh-time${closed ? " closed" : ""}">${parts}</span></div>`;
       }).join("") + `</div>`;
     }
     html += `</div>`;
@@ -707,12 +923,12 @@ function moreInfo(p){
   const web = p.websiteUri && /^https?:\/\//i.test(p.websiteUri) ? p.websiteUri : null;
   if (tel || web){
     html += `<div class="contact">
-      ${tel ? `<a class="btn" href="tel:${esc(tel.replace(/[^\d+]/g, ""))}">Zavolať<span class="sub">${esc(p.nationalPhoneNumber || tel)}</span></a>` : ""}
-      ${web ? `<a class="btn" href="${esc(web)}" target="_blank" rel="noopener">Web podniku<span class="sub">${esc(web.replace(/^https?:\/\/(www\.)?/i, "").replace(/\/.*$/, ""))}</span></a>` : ""}
+      ${tel ? `<a class="btn" href="tel:${esc(tel.replace(/[^\d+]/g, ""))}">${t("call")}<span class="sub">${esc(p.nationalPhoneNumber || tel)}</span></a>` : ""}
+      ${web ? `<a class="btn" href="${esc(web)}" target="_blank" rel="noopener">${t("web")}<span class="sub">${esc(web.replace(/^https?:\/\/(www\.)?/i, "").replace(/\/.*$/, ""))}</span></a>` : ""}
     </div>`;
   }
   html += reviewHtml(p);
-  if (!html) html = `<p class="none">Podrobnosti Google pri tomto podniku nemá. Viac nájdeš cez V Mapách.</p>`;
+  if (!html) html = `<p class="none">${t("noDetails")}</p>`;
   return html;
 }
 function payOf(p){
@@ -777,7 +993,7 @@ function renderControls(){
     const b = document.createElement("button");
     b.type = "button"; b.className = "tab"; b.setAttribute("role","tab");
     const hasSel = g.items.some(i => i.id === prefs.cuisine);
-    b.textContent = g.label;
+    b.textContent = catLabel(g);
     b.setAttribute("aria-selected", prefs.group === g.id ? "true" : "false");
     if (hasSel) b.classList.add("has-sel");
     b.addEventListener("click", () => { prefs.group = g.id; savePrefs(); renderControls(); });
@@ -787,7 +1003,7 @@ function renderControls(){
   const cu = $("#cuisines"); const sameGroup = cu.dataset.group === prefs.group; const cuLeft = sameGroup ? cu.scrollLeft : 0;
   cu.replaceChildren(); cu.dataset.group = prefs.group;
   const group = GROUPS.find(g => g.id === prefs.group);
-  group.items.forEach(c => cu.append(chip(c.label, prefs.cuisine === c.id, () => { prefs.cuisine = c.id; savePrefs(); renderControls(); })));
+  group.items.forEach(c => cu.append(chip(catLabel(c), prefs.cuisine === c.id, () => { prefs.cuisine = c.id; savePrefs(); renderControls(); })));
   cu.scrollLeft = cuLeft;
   if (!sameGroup){ const on = cu.querySelector('[aria-pressed="true"]'); if (on) cu.scrollLeft = Math.max(0, on.offsetLeft - 18); }
   const activeTab = gr.querySelector('[aria-selected="true"]');
@@ -796,16 +1012,16 @@ function renderControls(){
   updateFades();
 
   const fr = $("#fRating"); fr.replaceChildren();
-  RATINGS.forEach(r => fr.append(chip(r.l, prefs.minRating === r.v, () => { prefs.minRating = r.v; savePrefs(); renderControls(); renderResults(); })));
+  RATINGS.forEach(v => fr.append(chip(v ? nf1.format(v) + "+" : t("ratingAll"), prefs.minRating === v, () => { prefs.minRating = v; savePrefs(); renderControls(); renderResults(); })));
 
   const fp = $("#fPrice"); fp.replaceChildren();
-  [1,2,3,4].forEach(i => fp.append(chip(PRICE_NAMES[i], prefs.prices.includes(i), () => {
+  [1,2,3,4].forEach(i => fp.append(chip(priceName(i), prefs.prices.includes(i), () => {
     prefs.prices = prefs.prices.includes(i) ? prefs.prices.filter(x => x !== i) : [...prefs.prices, i];
     savePrefs(); renderControls(); renderResults();
   })));
 
   const fy = $("#fPay"); fy.replaceChildren();
-  PAYS.forEach(p => fy.append(chip(p.l, prefs.pay === p.v, () => { prefs.pay = p.v; savePrefs(); renderControls(); renderResults(); })));
+  PAYS.forEach(v => fy.append(chip(t("pay_" + v), prefs.pay === v, () => { prefs.pay = v; savePrefs(); renderControls(); renderResults(); })));
 
   $("#fOpen").checked = prefs.openNow;
   $("#fHideUnknown").checked = prefs.hideUnknown;
@@ -815,7 +1031,7 @@ function renderControls(){
   let n = 0;
   if (prefs.minRating) n++; if (prefs.prices.length) n++; if (prefs.pay !== "any") n++;
   if (prefs.openNow) n++; if (prefs.hideUnknown) n++;
-  $("#filtersSummary").textContent = n ? `Filtre a zoradenie (aktívne: ${n})` : "Filtre a zoradenie";
+  $("#filtersSummary").textContent = n ? t("filtersActive", {n}) : t("filters");
 }
 
 function updateFades(){
@@ -869,16 +1085,16 @@ function filtered(){
 /* ---------- Výsledky ---------- */
 function payTag(p){
   const s = payOf(p);
-  if (s === "card") return `<span class="tag ok">Berú kartu</span>`;
-  if (s === "cash") return `<span class="tag warn">Len hotovosť</span>`;
-  return `<span class="tag">Platba neuvedená</span>`;
+  if (s === "card") return `<span class="tag ok">${t("tagCard")}</span>`;
+  if (s === "cash") return `<span class="tag warn">${t("tagCash")}</span>`;
+  return `<span class="tag">${t("tagPayUnknown")}</span>`;
 }
 function renderResults(){
   const ol = $("#results"); ol.replaceChildren();
   if (!results.length){ $("#btnMore").hidden = true; renderCompareBar(); return; }
   const list = filtered();
   if (!list.length){
-    ol.innerHTML = `<li class="empty">Filtrom nevyhovuje žiadny z ${results.length} nájdených podnikov. Uvoľni filtre alebo načítaj ďalšie.</li>`;
+    ol.innerHTML = `<li class="empty">${t("emptyFilt", {n:results.length})}</li>`;
   }
   for (const p of list){
     const r = p.rating, cls = !r ? "none" : r >= 4.5 ? "hi" : r >= 4 ? "good" : r >= 3.5 ? "mid" : "low";
@@ -887,22 +1103,22 @@ function renderResults(){
     const li = document.createElement("li");
     li.className = "place";
     li.innerHTML = `
-      <div class="score ${cls}"><span class="num">${r ? nf1.format(r) : "bez<br>hodn."}</span>
-        ${r ? `<span class="cnt">${nf0.format(p.userRatingCount||0)} hodn.</span>` : ""}
+      <div class="score ${cls}"><span class="num">${r ? nf1.format(r) : t("noRating")}</span>
+        ${r ? `<span class="cnt">${nf0.format(p.userRatingCount||0)} ${t("reviewsShort")}</span>` : ""}
         ${priceBlock(p)}</div>
       <div>
         <h3><button type="button" class="name-btn" data-toggle="${esc(p.id)}" aria-expanded="${expanded.has(p.id)}"><span class="chev" aria-hidden="true"></span>${esc(p.displayName?.text)}</button></h3>
         ${metaParts.length ? `<p class="meta">${esc(metaParts.join(", "))}</p>` : ""}
         <p class="addr">${esc(p.formattedAddress)}</p>
         <div class="tags">${payTag(p)}
-          ${open === true ? `<span class="tag ok">Teraz otvorené</span>` : open === false ? `<span class="tag">Teraz zatvorené</span>` : ""}
-          ${p.businessStatus === "CLOSED_TEMPORARILY" ? `<span class="tag warn">Dočasne zatvorené</span>` : ""}
+          ${open === true ? `<span class="tag ok">${t("tagOpen")}</span>` : open === false ? `<span class="tag">${t("tagClosed")}</span>` : ""}
+          ${p.businessStatus === "CLOSED_TEMPORARILY" ? `<span class="tag warn">${t("tagTemp")}</span>` : ""}
         </div>
         <div class="more-info" id="info-${esc(p.id)}" ${expanded.has(p.id) ? "" : "hidden"}>${moreInfo(p)}</div>
         <div class="actions">
-          <button type="button" class="btn primary" data-nav="${esc(p.id)}">Navigovať</button>
-          <button type="button" class="btn" data-detail="${esc(p.id)}">V Mapách</button>
-          <label class="cmp"><input type="checkbox" data-cmp="${esc(p.id)}" ${compare.has(p.id) ? "checked" : ""}> Porovnať</label>
+          <button type="button" class="btn primary" data-nav="${esc(p.id)}">${t("nav")}</button>
+          <button type="button" class="btn" data-detail="${esc(p.id)}">${t("inMaps")}</button>
+          <label class="cmp"><input type="checkbox" data-cmp="${esc(p.id)}" ${compare.has(p.id) ? "checked" : ""}> ${t("compare")}</label>
         </div>
       </div>`;
     ol.append(li);
@@ -928,7 +1144,7 @@ $("#results").addEventListener("click", e => {
 $("#results").addEventListener("change", e => {
   const cb = e.target.closest("[data-cmp]"); if (!cb) return;
   if (cb.checked){
-    if (compare.size >= 3){ cb.checked = false; setStatus("Porovnať môžeš naraz najviac 3 podniky."); return; }
+    if (compare.size >= 3){ cb.checked = false; setStatus(t("cmpMax")); return; }
     compare.add(cb.dataset.cmp);
   } else compare.delete(cb.dataset.cmp);
   renderCompareBar();
@@ -938,7 +1154,7 @@ $("#results").addEventListener("change", e => {
 function renderCompareBar(){
   for (const id of [...compare]) if (!findPlace(id)) compare.delete(id);
   $("#cmpBar").hidden = compare.size < 1;
-  $("#cmpCount").textContent = compare.size === 1 ? "Vybraný 1 podnik, pridaj ďalší" : `Vybrané ${compare.size} podniky`;
+  $("#cmpCount").textContent = compare.size === 1 ? t("cmpOne") : t("cmpMany", {n:compare.size});
   $("#btnCompare").disabled = compare.size < 2;
 }
 function renderCompare(){
@@ -950,19 +1166,19 @@ function renderCompare(){
     return vals.map(v => v === target);
   };
   const rows = [
-    ["Hodnotenie", ps.map(p => p.rating ? nf1.format(p.rating) : "–"), best(ps.map(p => p.rating ?? null), "max")],
-    ["Počet hodnotení", ps.map(p => nf0.format(p.userRatingCount || 0)), best(ps.map(p => p.userRatingCount ?? null), "max")],
-    ["Cena", ps.map(p => priceText(p) || "neuvedená"), best(ps.map(priceIdx), "min")],
-    ["Platba", ps.map(p => ({card:"Berú kartu", cash:"Len hotovosť", unknown:"Neuvedená"})[payOf(p)]), ps.map(() => false)],
-    ["Teraz otvorené", ps.map(p => p.currentOpeningHours?.openNow === true ? "Áno" : p.currentOpeningHours?.openNow === false ? "Nie" : "–"), ps.map(() => false)],
-    ["Vzdialenosť", ps.map(p => p._dist != null ? fmtDist(p._dist) : "–"), best(ps.map(p => p._dist ?? null), "min")],
-    ["Typ", ps.map(p => p.primaryTypeDisplayName?.text || "–"), ps.map(() => false)],
-    ["Adresa", ps.map(p => p.formattedAddress || "–"), ps.map(() => false)]
+    [t("rRating"), ps.map(p => p.rating ? nf1.format(p.rating) : "–"), best(ps.map(p => p.rating ?? null), "max")],
+    [t("rCount"), ps.map(p => nf0.format(p.userRatingCount || 0)), best(ps.map(p => p.userRatingCount ?? null), "max")],
+    [t("rPrice"), ps.map(p => priceText(p) || t("notListedF")), best(ps.map(priceIdx), "min")],
+    [t("rPay"), ps.map(p => ({card:t("tagCard"), cash:t("tagCash"), unknown:t("payNotListed")})[payOf(p)]), ps.map(() => false)],
+    [t("rOpen"), ps.map(p => p.currentOpeningHours?.openNow === true ? t("yes") : p.currentOpeningHours?.openNow === false ? t("no") : "–"), ps.map(() => false)],
+    [t("rDist"), ps.map(p => p._dist != null ? fmtDist(p._dist) : "–"), best(ps.map(p => p._dist ?? null), "min")],
+    [t("rType"), ps.map(p => p.primaryTypeDisplayName?.text || "–"), ps.map(() => false)],
+    [t("rAddr"), ps.map(p => p.formattedAddress || "–"), ps.map(() => false)]
   ];
   $("#cmpTable").innerHTML = `<table class="cmp-table">
     <thead><tr><th></th>${ps.map(p => `<th>${esc(p.displayName?.text)}</th>`).join("")}</tr></thead>
     <tbody>${rows.map(([label, vals, flags]) => `<tr><th>${label}</th>${vals.map((v,i) => `<td class="${flags[i] ? "best" : ""}">${esc(v)}</td>`).join("")}</tr>`).join("")}
-    <tr><th></th>${ps.map(p => `<td><button type="button" class="btn primary" data-nav="${esc(p.id)}">Navigovať</button></td>`).join("")}</tr>
+    <tr><th></th>${ps.map(p => `<td><button type="button" class="btn primary" data-nav="${esc(p.id)}">${t("nav")}</button></td>`).join("")}</tr>
     </tbody></table>`;
 }
 $("#cmpTable").addEventListener("click", e => {
@@ -990,13 +1206,13 @@ function rectAround(c, r){
 /* ---------- Chybové hlásenia ---------- */
 function explainError(status, msg){
   const m = (msg || "").toLowerCase();
-  if (m.includes("api key not valid") || m.includes("api_key_invalid")) return "Kľúč nie je platný. Skontroluj ho v nastaveniach (ozubené koliesko vpravo hore).";
-  if (m.includes("referer") || m.includes("referrer")) return "Kľúč je obmedzený na inú webovú adresu. V Google Cloud skontroluj obmedzenie Websites pri kľúči.";
-  if (m.includes("billing")) return "Google vyhľadávanie zastavil, lebo projekt nemá aktívne fakturovanie (napríklad skončila skúšobná verzia). Nič sa ti neúčtuje, appka len nebude hľadať.";
-  if (m.includes("has not been used") || m.includes("is disabled") || m.includes("service_disabled")) return "V Google Cloud nie je zapnutá služba Places API (New). Zapni ju a skús to o pár minút znova.";
-  if (m.includes("blocked") || m.includes("api_key_service_blocked")) return "Kľúč nemá povolenú službu Places API (New). Pridaj ju v obmedzeniach kľúča.";
-  if (status === 429) return "Google dočasne odmietol vyhľadávanie, lebo bol dosiahnutý limit. Skús to neskôr.";
-  return `Vyhľadávanie zlyhalo (${status}). ${msg || ""}`.trim();
+  if (m.includes("api key not valid") || m.includes("api_key_invalid")) return t("errKey");
+  if (m.includes("referer") || m.includes("referrer")) return t("errRef");
+  if (m.includes("billing")) return t("errBilling");
+  if (m.includes("has not been used") || m.includes("is disabled") || m.includes("service_disabled")) return t("errDisabled");
+  if (m.includes("blocked") || m.includes("api_key_service_blocked")) return t("errBlocked");
+  if (status === 429) return t("err429");
+  return `${t("errGeneric", {s:status})} ${msg || ""}`.trim();
 }
 
 /* ---------- Vyhľadávanie ---------- */
@@ -1016,13 +1232,13 @@ async function callPlaces(body, key){
     if (res.status === 400 && bad){ OPTIONAL_FIELDS = OPTIONAL_FIELDS.filter(f => f !== bad); continue; }
     const e = new Error(explainError(res.status, msg)); e.handled = true; throw e;
   }
-  throw Object.assign(new Error("Vyhľadávanie zlyhalo."), {handled:true});
+  throw Object.assign(new Error(t("errFailed")), {handled:true});
 }
 
 async function search(more = false){
   if (searching) return;
   const key = getKey();
-  if (!key){ openSettings(); setStatus("Najprv vlož svoj Google kľúč v nastaveniach.", true); return; }
+  if (!key){ openSettings(); setStatus(t("needKey"), true); return; }
 
   let body;
   if (more){
@@ -1030,20 +1246,18 @@ async function search(more = false){
     body = {...lastBody, pageToken:nextToken};
   } else {
     const c = CUISINES.find(x => x.id === prefs.cuisine) || CUISINES[0];
-    body = {textQuery:c.q, languageCode:"sk", pageSize:20};
+    body = {textQuery:c.q, languageCode:LANGS[prefs.lang].google, pageSize:20};
     if (prefs.mode === "city"){
       const city = $("#city").value.trim();
-      if (!city){ setStatus("Napíš mesto, v ktorom chceš hľadať.", true); $("#city").focus(); return; }
+      if (!city){ setStatus(t("needCity"), true); $("#city").focus(); return; }
       prefs.city = city; savePrefs();
       body.textQuery = `${c.q} in ${city}`;
       center = null;
     } else {
-      setStatus("Zisťujem polohu…");
+      setStatus(t("locating"));
       try { center = await getPosition(); }
       catch (err){
-        setStatus(err && err.code === 1
-          ? "Appka nemá povolenú polohu. Povoľ ju, keď sa iPhone opýta, alebo v Nastaveniach → Súkromie a bezpečnosť → Polohové služby. Prípadne prepni na režim V meste."
-          : "Polohu sa nepodarilo zistiť. Skús to znova vonku alebo prepni na režim V meste.", true);
+        setStatus(err && err.code === 1 ? t("geoDenied") : t("geoFail"), true);
         return;
       }
       body.locationRestriction = {rectangle:rectAround(center, prefs.radius)};
@@ -1054,15 +1268,15 @@ async function search(more = false){
   let data = cache.get(cacheKey);
   if (!data){
     const u = usage();
-    if (u.monthCount >= LIMIT()){ setStatus(`Limit ${LIMIT()} vyhľadávaní pre tento telefón je na tento mesiac vyčerpaný. Obnoví sa 1. dňa v mesiaci približne o 9:00. Filtre na už nájdené podniky fungujú ďalej.`, true); return; }
+    if (u.monthCount >= LIMIT()){ setStatus(t("limitHit", {l:LIMIT()}), true); return; }
     searching = true; $("#btnSearch").disabled = true; $("#btnMore").disabled = true;
-    setStatus("Hľadám…");
+    setStatus(t("searching"));
     try {
       data = await callPlaces(body, key);
       addUsage();
       cache.set(cacheKey, data);
     } catch (err){
-      setStatus(err.handled ? err.message : "Nepodarilo sa spojiť so službou Google. Skontroluj pripojenie na internet.", true);
+      setStatus(err.handled ? err.message : t("netErr"), true);
       return;
     } finally {
       searching = false; $("#btnSearch").disabled = false; $("#btnMore").disabled = false;
@@ -1073,10 +1287,10 @@ async function search(more = false){
   let places = data.places || [];
   const sel = CUISINES.find(x => x.id === prefs.cuisine);
   if (sel && sel.brand && !more){
-    const norm = t => (t || "").toLowerCase().replace(/[’'`]/g, "");
+    const norm = v => (v || "").toLowerCase().replace(/[’'`]/g, "");
     places = places.filter(p => norm(p.displayName?.text).includes(norm(sel.brand)));
   } else if (more && lastBrand){
-    const norm = t => (t || "").toLowerCase().replace(/[’'`]/g, "");
+    const norm = v => (v || "").toLowerCase().replace(/[’'`]/g, "");
     places = places.filter(p => norm(p.displayName?.text).includes(norm(lastBrand)));
   }
   if (center){
@@ -1088,8 +1302,8 @@ async function search(more = false){
   for (const p of places) if (!seen.has(p.id)) results.push(p);
   nextToken = data.nextPageToken || null;
 
-  if (!results.length) setStatus((sel && sel.brand ? `V tejto oblasti sa nenašla žiadna pobočka ${sel.label}. Skús väčší okruh alebo iné mesto.` : "Nič sa nenašlo. Skús inú kategóriu, väčší okruh alebo iné mesto."));
-  else setStatus(`Nájdené podniky: ${results.length}${nextToken ? ". Ďalšie môžeš načítať dole." : "."}`);
+  if (!results.length) setStatus((sel && sel.brand ? t("noBrand", {b:catLabel(sel)}) : t("nothing")));
+  else setStatus(t(nextToken ? "foundMore" : "found", {n:results.length}));
   if (prefs.sort === "near" && !center){ prefs.sort = "best"; savePrefs(); renderControls(); }
   renderResults();
   if (!more){
@@ -1103,19 +1317,19 @@ async function search(more = false){
 /* ---------- Nastavenia ---------- */
 function renderKeyState(){
   const k = getKey();
-  $("#keyState").textContent = k ? `Uložený kľúč končí na …${k.slice(-4)}.` : "Žiadny kľúč nie je uložený.";
+  $("#keyState").textContent = k ? t("keyEnds", {k:k.slice(-4)}) : t("keyNone");
 }
-function openSettings(){ $("#keyInput").value = ""; renderKeyState(); renderUsage(); $("#dlgSettings").showModal(); }
+function openSettings(){ $("#keyInput").value = ""; $("#langNote").hidden = true; renderKeyState(); renderUsage(); const d = $("#dlgSettings"); d.showModal(); d.scrollTop = 0; requestAnimationFrame(() => { d.scrollTop = 0; }); }
 $("#btnSettings").addEventListener("click", openSettings);
 $("#btnCloseSettings").addEventListener("click", () => $("#dlgSettings").close());
 $("#btnSaveKey").addEventListener("click", () => {
   const v = $("#keyInput").value.trim();
-  if (!v){ $("#keyState").textContent = "Najprv vlož kľúč do poľa."; return; }
+  if (!v){ $("#keyState").textContent = t("keyEmpty"); return; }
   store.set("kj_key", v); $("#keyInput").value = ""; renderKeyState();
 });
 $("#btnShowKey").addEventListener("click", () => {
   const i = $("#keyInput"); const show = i.type === "password";
-  i.type = show ? "text" : "password"; $("#btnShowKey").textContent = show ? "Skryť" : "Zobraziť";
+  i.type = show ? "text" : "password"; $("#btnShowKey").textContent = show ? t("hide") : t("show");
 });
 $("#btnDelKey").addEventListener("click", () => { store.del("kj_key"); renderKeyState(); });
 $("#optGmApp").addEventListener("change", e => { prefs.gmApp = e.target.checked; savePrefs(); });
@@ -1127,6 +1341,24 @@ $("#btnSetUsage").addEventListener("click", () => {
   const n = Math.max(0, Math.min(MAX_LIMIT, parseInt($("#usageInput").value, 10) || 0));
   const u = usage(); u.monthCount = n; store.set("kj_usage", u); renderUsage();
 });
+
+/* ---------- Jazyk ---------- */
+function applyLang(){
+  document.documentElement.lang = prefs.lang;
+  document.title = t("title");
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => { el.setAttribute("aria-label", t(el.dataset.i18nAria)); });
+  setFormats();
+  const lc = $("#langChips"); lc.replaceChildren();
+  Object.entries(LANGS).forEach(([code, L]) => lc.append(chip(L.name, prefs.lang === code, () => {
+    if (prefs.lang === code) return;
+    prefs.lang = code; savePrefs(); applyLang();
+    const note = $("#langNote"); if (results.length){ note.textContent = t("langNote"); note.hidden = false; }
+  })));
+  renderControls(); renderUsage(); renderKeyState(); renderResults();
+  setStatus(results.length ? t(nextToken ? "foundMore" : "found", {n:results.length}) : (getKey() ? t("startReady") : t("startKey")));
+}
 
 /* ---------- Udalosti ---------- */
 document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => { prefs.mode = b.dataset.mode; savePrefs(); renderControls(); }));
@@ -1145,12 +1377,12 @@ $("#citySug").addEventListener("click", e => {
 function pickCity(name){
   $("#city").value = name; prefs.city = name; savePrefs();
   hideSug(); $("#city").blur();
-  setStatus(`Mesto: ${name}. Ťukni na Hľadať.`);
+  setStatus(t("cityPicked", {c:name}));
 }
 function showSug(){
   const list = citySuggestions($("#city").value), ul = $("#citySug");
   if (!list.length || document.activeElement !== $("#city")){ hideSug(); return; }
-  ul.innerHTML = list.map(c => `<li role="option"><button type="button" data-city="${esc(c.name)}"><span>${esc(c.name)}</span>${c.recent ? `<span class="hint">naposledy</span>` : ""}</button></li>`).join("");
+  ul.innerHTML = list.map(c => `<li role="option"><button type="button" data-city="${esc(c.recent ? c.name : cityLabel(c.name))}"><span>${esc(c.recent ? c.name : cityLabel(c.name))}</span>${c.recent ? `<span class="hint">${t("recentHint")}</span>` : ""}</button></li>`).join("");
   ul.hidden = false; $("#city").setAttribute("aria-expanded","true");
 }
 function hideSug(){ $("#citySug").hidden = true; $("#city").setAttribute("aria-expanded","false"); }
@@ -1163,9 +1395,9 @@ function renderRecent(){
   const box = $("#recent"), list = prefs.recentCities || [];
   box.hidden = !list.length;
   if (!list.length){ box.replaceChildren(); return; }
-  box.innerHTML = `<span class="lbl">Naposledy:</span>` +
+  box.innerHTML = `<span class="lbl">${t("recentLbl")}</span>` +
     list.map(c => `<button type="button" class="chip" data-recent="${esc(c)}">${esc(c)}</button>`).join("") +
-    `<button type="button" class="clear" id="btnClearRecent">Vymazať</button>`;
+    `<button type="button" class="clear" id="btnClearRecent">${t("clear")}</button>`;
 }
 $("#recent").addEventListener("click", e => {
   const b = e.target.closest("[data-recent]");
@@ -1179,13 +1411,8 @@ $("#fHideUnknown").addEventListener("change", e => { prefs.hideUnknown = e.targe
 $("#sort").addEventListener("change", e => { prefs.sort = e.target.value; savePrefs(); renderResults(); });
 
 /* ---------- Štart ---------- */
-renderControls(); renderUsage();
-if (!getKey()){
-  setStatus("Na začiatok vlož svoj Google kľúč. Nastavenia otvoríš cez ozubené koliesko vpravo hore.");
-  openSettings();
-} else {
-  setStatus("Vyber okolie alebo mesto, čo chceš jesť, a ťukni na Hľadať.");
-}
+applyLang();
+if (!getKey()) openSettings();
 })();
 </script>
 </body>

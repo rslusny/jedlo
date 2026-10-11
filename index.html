@@ -102,6 +102,15 @@ h1{font:800 clamp(28px,8.4vw,46px)/0.95 var(--display);letter-spacing:-0.02em;ma
 .seg button[aria-pressed="true"]{background:var(--green);color:#fff}
 
 .field{margin-top:12px}
+.cat-search{position:relative;margin-top:18px}
+.cat-search svg{position:absolute;left:12px;top:50%;width:18px;height:18px;transform:translateY(-50%);fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;pointer-events:none}
+.cat-search input[type=text]{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 40px 11px 38px}
+.cat-clear{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:none;color:var(--muted);font-size:22px;line-height:1}
+.cat-note{margin:6px 0 0;font-size:12px;color:var(--muted)}
+.custom-sel{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 8px 8px 12px;border-radius:12px;
+  background:color-mix(in srgb,var(--mustard) 18%,transparent);font-weight:600;overflow-wrap:anywhere}
+.custom-sel span{flex:1;min-width:0}
+.custom-sel button{flex:none;border:0;background:none;color:inherit;font-size:20px;width:32px;height:32px}
 .city-wrap{position:relative}
 .sug{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;list-style:none;margin:0;padding:6px;
   background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.22);
@@ -132,6 +141,7 @@ h1{font:800 clamp(28px,8.4vw,46px)/0.95 var(--display);letter-spacing:-0.02em;ma
 .tabs.at-end,.chips.scroll.at-end{-webkit-mask-image:none;mask-image:none}
 .chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;
   white-space:nowrap;font-size:15px}
+.chip-own{border-style:dashed}
 .chip[aria-pressed="true"]{background:var(--mustard);border-color:var(--mustard);color:var(--mustard-ink);font-weight:600}
 input[type=text],input[type=password],select{width:100%;border:1px solid var(--line);background:var(--surface);
   border-radius:12px;padding:12px 14px}
@@ -149,6 +159,7 @@ details.filters summary::-webkit-details-marker{display:none}
 details.filters summary::after{content:"+";font:700 22px/1 var(--display);color:var(--muted)}
 details.filters[open] summary::after{content:"−"}
 .filters-body{padding-bottom:16px}
+.attr-note{margin:6px 0 0;font-size:12px;color:var(--muted)}
 .toggle{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:15px}
 .toggle input{width:20px;height:20px;accent-color:var(--green)}
 
@@ -291,6 +302,14 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
       </div>
       <div id="recent" class="recent" hidden></div>
     </div>
+    <div class="cat-search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="catSearch" type="text" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search"
+        placeholder="Hľadaj kategóriu alebo napíš vlastné…" data-i18n-ph="catSearchPh">
+      <button type="button" id="catClear" class="cat-clear" aria-label="Vymazať" data-i18n-aria="clear" hidden>×</button>
+    </div>
+    <p class="cat-note" id="catNote" hidden></p>
+    <div class="custom-sel" id="customSel" hidden></div>
     <div class="tabs" id="groups" role="tablist"></div>
     <div class="chips scroll" id="cuisines"></div>
     <button id="btnSearch" class="search-btn" type="button" data-i18n="search">Hľadať</button>
@@ -306,6 +325,9 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
       <div class="chips" id="fPrice"></div>
       <p class="field-label" data-i18n="fPay">Platba</p>
       <div class="chips" id="fPay"></div>
+      <p class="field-label" data-i18n="fAttrs">Vlastnosti</p>
+      <div class="chips" id="fAttrs"></div>
+      <p class="attr-note" data-i18n="fAttrsNote">Zobrazia sa len podniky, pri ktorých to Google uvádza.</p>
       <label class="toggle"><input type="checkbox" id="fOpen"> <span data-i18n="fOpen">Len teraz otvorené</span></label>
       <label class="toggle"><input type="checkbox" id="fHideUnknown"> <span data-i18n="fHide">Skryť podniky bez údaja o cene alebo platbe</span></label>
       <p class="field-label" data-i18n="sortLbl">Zoradiť</p>
@@ -424,6 +446,7 @@ let OPTIONAL_FIELDS = ["places.priceRange","places.primaryTypeDisplayName","plac
 const GROUPS = [
   {id:"kuchyna", label:"Kuchyňa", items:[
     {id:"all", label:"Všetko", q:"restaurant"},
+    {id:"menu", label:"Obedové menu", q:"daily lunch menu"},
     {id:"sk", label:"Slovenská", q:"slovak restaurant"},
     {id:"cz", label:"Česká", q:"czech restaurant"},
     {id:"it", label:"Talianska", q:"italian restaurant"},
@@ -439,8 +462,10 @@ const GROUPS = [
     {id:"in", label:"Indická", q:"indian restaurant"},
     {id:"mx", label:"Mexická", q:"mexican restaurant"},
     {id:"us", label:"Americká", q:"american restaurant"},
-    {id:"fish", label:"Ryby a morské plody", q:"seafood restaurant"},
-    {id:"veg", label:"Vegetariánska a vegánska", q:"vegetarian vegan restaurant"}
+    {id:"es", label:"Španielska", q:"spanish restaurant tapas"},
+    {id:"mideast", label:"Blízkovýchodná", q:"middle eastern lebanese restaurant"},
+    {id:"ge", label:"Gruzínska", q:"georgian restaurant"},
+    {id:"fish", label:"Ryby a morské plody", q:"seafood restaurant"}
   ]},
   {id:"jedla", label:"Jedlá", items:[
     {id:"pizza", label:"Pizza", q:"pizza"},
@@ -458,7 +483,12 @@ const GROUPS = [
     {id:"halusky", label:"Halušky", q:"bryndzové halušky"},
     {id:"wings", label:"Krídelká", q:"chicken wings"},
     {id:"pasta", label:"Cestoviny", q:"fresh pasta"},
-    {id:"dumplings", label:"Dim sum", q:"dumplings dim sum"}
+    {id:"dumplings", label:"Dim sum", q:"dumplings dim sum"},
+    {id:"falafel", label:"Falafel", q:"falafel"},
+    {id:"crepes", label:"Palacinky", q:"crepes pancakes"},
+    {id:"langos", label:"Langoš", q:"langos"},
+    {id:"sandwich", label:"Bagety a sendviče", q:"sandwich baguette"},
+    {id:"bowl", label:"Bowl", q:"healthy bowl"}
   ]},
   {id:"sladke", label:"Kaviarne a sladké", items:[
     {id:"cafe", label:"Kaviareň", q:"cafe"},
@@ -467,7 +497,9 @@ const GROUPS = [
     {id:"pekaren", label:"Pekáreň", q:"bakery"},
     {id:"zmrzlina", label:"Zmrzlina", q:"ice cream gelato"},
     {id:"brunch", label:"Raňajky a brunch", q:"breakfast brunch"},
-    {id:"caj", label:"Čajovňa", q:"tea house"}
+    {id:"caj", label:"Čajovňa", q:"tea house"},
+    {id:"bubble", label:"Bubble tea", q:"bubble tea"},
+    {id:"donut", label:"Donuty", q:"donuts"}
   ]},
   {id:"fastfood", label:"Rýchle občerstvenie", items:[
     {id:"ff-all", label:"Všetky", q:"fast food"},
@@ -478,8 +510,6 @@ const GROUPS = [
     {id:"dominos", label:"Domino's", q:"Domino's Pizza", brand:"domino"},
     {id:"pizzahut", label:"Pizza Hut", q:"Pizza Hut", brand:"pizza hut"},
     {id:"fiveguys", label:"Five Guys", q:"Five Guys", brand:"five guys"},
-    {id:"popeyes", label:"Popeyes", q:"Popeyes", brand:"popeyes"},
-    {id:"tacobell", label:"Taco Bell", q:"Taco Bell", brand:"taco bell"},
     {id:"bageterie", label:"Bageterie Boulevard", q:"Bageterie Boulevard", brand:"bageterie"}
   ]}
 ];
@@ -489,6 +519,15 @@ const RATINGS = [0, 3.5, 4, 4.5];
 const PRICE_IDX = {PRICE_LEVEL_FREE:0, PRICE_LEVEL_INEXPENSIVE:1, PRICE_LEVEL_MODERATE:2, PRICE_LEVEL_EXPENSIVE:3, PRICE_LEVEL_VERY_EXPENSIVE:4};
 const priceName = i => t("priceNames")[i];
 const PAYS = ["any","card","cash"];
+/* Filtre podľa vlastností podniku. Údaje už prichádzajú s vyhľadávaním, takže filtrovanie nič nestojí. */
+const ATTRS = {
+  veg:    p => p.servesVegetarianFood === true,
+  terrace:p => p.outdoorSeating === true,
+  dogs:   p => p.allowsDogs === true,
+  kids:   p => p.goodForChildren === true || p.menuForChildren === true,
+  reserv: p => p.reservable === true,
+  wheel:  p => p.accessibilityOptions?.wheelchairAccessibleEntrance === true
+};
 
 /* ---------- Jazyky appky: slovenčina, čeština, angličtina ---------- */
 const LANGS = {sk:{name:"Slovenčina", locale:"sk-SK", google:"sk"}, cs:{name:"Čeština", locale:"cs-CZ", google:"cs"}, en:{name:"English", locale:"en-GB", google:"en"}};
@@ -498,6 +537,11 @@ function detectLang(){
 }
 const T = {
 sk:{
+  fAttrs:"Vlastnosti", fAttrsNote:"Zobrazia sa len podniky, pri ktorých to Google uvádza.",
+  attr_veg:"Vegetariánske jedlá", attr_terrace:"Terasa", attr_dogs:"Psy povolené", attr_kids:"Vhodné pre deti",
+  attr_reserv:"Rezervácia", attr_wheel:"Bezbariérový vstup",
+  catSearchPh:"Hľadaj kategóriu alebo napíš vlastné…", customChip:"Hľadať „{q}“", customSel:"Vlastné hľadanie: „{q}“",
+  customClear:"Zrušiť vlastné hľadanie", catNote:"Kategórie sa hľadajú bez Google. Vlastné hľadanie sa počíta ako bežné vyhľadávanie.",
   reset:"Resetovať vyhľadávanie", resetDone:"Vyhľadávanie je nastavené odznova. Obľúbené, kľúč a nastavenia ostali.",
   title:"Kam na jedlo", settings:"Nastavenia", searchAria:"Vyhľadávanie", near:"V okolí", city:"V meste",
   cityPh:"Napr. Brno, Bratislava, Košice", search:"Hľadať", filters:"Filtre a zoradenie", filtersActive:"Filtre a zoradenie (aktívne: {n})",
@@ -557,6 +601,11 @@ sk:{
   dLimit:"Limit {l} načítaní detailov pre tento telefón je na tento mesiac vyčerpaný. Navigovať a V Mapách fungujú ďalej.", favEmpty:"Zatiaľ nemáš žiadne obľúbené podniky. Pridáš ich srdiečkom pri podniku vo výsledkoch."
 },
 cs:{
+  fAttrs:"Vlastnosti", fAttrsNote:"Zobrazí se jen podniky, u kterých to Google uvádí.",
+  attr_veg:"Vegetariánská jídla", attr_terrace:"Terasa", attr_dogs:"Psi povoleni", attr_kids:"Vhodné pro děti",
+  attr_reserv:"Rezervace", attr_wheel:"Bezbariérový vstup",
+  catSearchPh:"Hledej kategorii nebo napiš vlastní…", customChip:"Hledat „{q}“", customSel:"Vlastní hledání: „{q}“",
+  customClear:"Zrušit vlastní hledání", catNote:"Kategorie se hledají bez Google. Vlastní hledání se počítá jako běžné vyhledávání.",
   reset:"Resetovat vyhledávání", resetDone:"Vyhledávání je nastaveno od začátku. Oblíbené, klíč a nastavení zůstaly.",
   title:"Kam na jídlo", settings:"Nastavení", searchAria:"Vyhledávání", near:"V okolí", city:"Ve městě",
   cityPh:"Např. Brno, Praha, Ostrava", search:"Hledat", filters:"Filtry a řazení", filtersActive:"Filtry a řazení (aktivní: {n})",
@@ -616,6 +665,11 @@ cs:{
   dLimit:"Limit {l} načtení detailů pro tento telefon je na tento měsíc vyčerpán. Navigovat a V Mapách fungují dál.", favEmpty:"Zatím nemáš žádné oblíbené podniky. Přidáš je srdíčkem u podniku ve výsledcích."
 },
 en:{
+  fAttrs:"Features", fAttrsNote:"Only places where Google lists this are shown.",
+  attr_veg:"Vegetarian options", attr_terrace:"Outdoor seating", attr_dogs:"Dogs allowed", attr_kids:"Good for kids",
+  attr_reserv:"Reservations", attr_wheel:"Wheelchair accessible",
+  catSearchPh:"Find a category or type your own…", customChip:"Search “{q}”", customSel:"Custom search: “{q}”",
+  customClear:"Clear custom search", catNote:"Categories are searched without Google. A custom search counts as a regular search.",
   reset:"Reset search", resetDone:"Search has been reset. Favourites, key and settings were kept.",
   title:"Where to Eat", settings:"Settings", searchAria:"Search", near:"Nearby", city:"In a city",
   cityPh:"E.g. Prague, Vienna, Brno", search:"Search", filters:"Filters & sorting", filtersActive:"Filters & sorting ({n} active)",
@@ -691,7 +745,10 @@ const CAT_I18N = {
   schnitzel:["Řízek","Schnitzel"], halusky:["Halušky","Halušky"], wings:["Křidélka","Chicken wings"], pasta:["Těstoviny","Pasta"],
   sladke:["Kavárny a sladké","Cafés & sweets"], cafe:["Kavárna","Café"], specialty:["Výběrová kavárna","Specialty coffee"],
   cukraren:["Cukrárna","Pastry shop"], pekaren:["Pekárna","Bakery"], zmrzlina:["Zmrzlina","Ice cream"], brunch:["Snídaně a brunch","Breakfast & brunch"],
-  caj:["Čajovna","Tea house"], fastfood:["Rychlé občerstvení","Fast food"], "ff-all":["Vše","All"]
+  caj:["Čajovna","Tea house"], menu:["Polední menu","Lunch menu"], es:["Španělská","Spanish"],
+  mideast:["Blízkovýchodní","Middle Eastern"], ge:["Gruzínská","Georgian"], falafel:["Falafel","Falafel"],
+  crepes:["Palačinky","Crêpes & pancakes"], langos:["Langoš","Lángos"], sandwich:["Bagety a sendviče","Sandwiches & baguettes"],
+  bowl:["Bowl","Bowls"], bubble:["Bubble tea","Bubble tea"], donut:["Donuty","Doughnuts"], fastfood:["Rychlé občerstvení","Fast food"], "ff-all":["Vše","All"]
 };
 function catLabel(x){
   if (prefs.lang === "sk") return x.label;
@@ -775,8 +832,8 @@ const store = {
 const HAD_PREFS = store.get("kj_prefs", null) !== null;
 const prefs = Object.assign({
   lang: HAD_PREFS ? "sk" : detectLang(),
-  mode:"near", radius:1000, city:"", cuisine:"all", group:"kuchyna",
-  minRating:0, prices:[], pay:"any", openNow:false, hideUnknown:false, sort:"best", gmApp:true, monthLimit:900,
+  mode:"near", radius:1000, city:"", cuisine:"all", group:"kuchyna", customQ:"",
+  minRating:0, prices:[], pay:"any", openNow:false, hideUnknown:false, sort:"best", gmApp:true, monthLimit:900, attrs:[],
   recentCities:[]
 }, store.get("kj_prefs", {}));
 const savePrefs = () => store.set("kj_prefs", prefs);
@@ -1094,7 +1151,15 @@ function renderControls(){
   RADII.forEach(r => radii.append(chip(`${r/1000} km`, prefs.radius === r, () => { prefs.radius = r; savePrefs(); renderControls(); })));
 
   if (!GROUPS.some(g => g.id === prefs.group)) prefs.group = "kuchyna";
-  if (!CUISINES.some(c => c.id === prefs.cuisine)) prefs.cuisine = "all";
+  if (prefs.cuisine === "custom" && !prefs.customQ) prefs.cuisine = "all";
+  if (prefs.cuisine !== "custom" && !CUISINES.some(c => c.id === prefs.cuisine)) prefs.cuisine = "all";
+  const qv = $("#catSearch").value.trim();
+  $("#catClear").hidden = !qv;
+  $("#catNote").hidden = !qv; $("#catNote").textContent = t("catNote");
+  const cs = $("#customSel");
+  cs.hidden = !(prefs.cuisine === "custom" && !qv);
+  if (!cs.hidden) cs.innerHTML = `<span>${esc(t("customSel", {q:prefs.customQ}))}</span><button type="button" id="customX" aria-label="${esc(t("customClear"))}">×</button>`;
+  $("#groups").hidden = !!qv;
   const gr = $("#groups"); const grLeft = gr.scrollLeft; gr.replaceChildren();
   GROUPS.forEach(g => {
     const b = document.createElement("button");
@@ -1107,7 +1172,22 @@ function renderControls(){
     gr.append(b);
   });
   gr.scrollLeft = grLeft;
-  const cu = $("#cuisines"); const sameGroup = cu.dataset.group === prefs.group; const cuLeft = sameGroup ? cu.scrollLeft : 0;
+  const cu = $("#cuisines");
+  if (qv){
+    // režim hľadania: zhody zo všetkých záložiek + vlastné hľadanie
+    const n = normTxt(qv);
+    const matches = CUISINES.filter(c => {
+      const names = [c.label, catLabel(c), ...(CAT_I18N[c.id] || []), c.q];
+      return names.some(x => normTxt(x).includes(n));
+    });
+    cu.replaceChildren(); cu.dataset.group = "__search";
+    matches.forEach(c => cu.append(chip(catLabel(c), prefs.cuisine === c.id, () => pickCategory(c))));
+    const own = chip(t("customChip", {q:qv}), false, () => pickCustom(qv));
+    own.classList.add("chip-own"); cu.append(own);
+    cu.scrollLeft = 0;
+    updateFades();
+  } else {
+  const sameGroup = cu.dataset.group === prefs.group; const cuLeft = sameGroup ? cu.scrollLeft : 0;
   cu.replaceChildren(); cu.dataset.group = prefs.group;
   const group = GROUPS.find(g => g.id === prefs.group);
   group.items.forEach(c => cu.append(chip(catLabel(c), prefs.cuisine === c.id, () => { prefs.cuisine = c.id; savePrefs(); renderControls(); })));
@@ -1117,6 +1197,7 @@ function renderControls(){
   if (activeTab && (activeTab.offsetLeft + activeTab.offsetWidth > gr.scrollLeft + gr.clientWidth || activeTab.offsetLeft < gr.scrollLeft))
     gr.scrollLeft = Math.max(0, activeTab.offsetLeft - 18);
   updateFades();
+  }
 
   const fr = $("#fRating"); fr.replaceChildren();
   RATINGS.forEach(v => fr.append(chip(v ? nf1.format(v) + "+" : t("ratingAll"), prefs.minRating === v, () => { prefs.minRating = v; savePrefs(); renderControls(); renderResults(); })));
@@ -1124,6 +1205,13 @@ function renderControls(){
   const fp = $("#fPrice"); fp.replaceChildren();
   [1,2,3,4].forEach(i => fp.append(chip(priceName(i), prefs.prices.includes(i), () => {
     prefs.prices = prefs.prices.includes(i) ? prefs.prices.filter(x => x !== i) : [...prefs.prices, i];
+    savePrefs(); renderControls(); renderResults();
+  })));
+
+  const fa = $("#fAttrs"); fa.replaceChildren();
+  if (!Array.isArray(prefs.attrs)) prefs.attrs = [];
+  Object.keys(ATTRS).forEach(k => fa.append(chip(t("attr_" + k), prefs.attrs.includes(k), () => {
+    prefs.attrs = prefs.attrs.includes(k) ? prefs.attrs.filter(x => x !== k) : [...prefs.attrs, k];
     savePrefs(); renderControls(); renderResults();
   })));
 
@@ -1137,7 +1225,7 @@ function renderControls(){
 
   let n = 0;
   if (prefs.minRating) n++; if (prefs.prices.length) n++; if (prefs.pay !== "any") n++;
-  if (prefs.openNow) n++; if (prefs.hideUnknown) n++;
+  if (prefs.openNow) n++; if (prefs.hideUnknown) n++; n += (prefs.attrs || []).length;
   $("#filtersSummary").textContent = n ? t("filtersActive", {n}) : t("filters");
 }
 
@@ -1173,6 +1261,7 @@ function filtered(){
   if (prefs.pay === "cash") list = list.filter(p => payOf(p) === "cash");
   if (prefs.hideUnknown && prefs.pay === "any" && !prefs.prices.length) list = list.filter(p => priceIdx(p) !== null || payOf(p) !== "unknown");
   if (prefs.openNow) list = list.filter(p => p.currentOpeningHours?.openNow === true);
+  for (const k of (prefs.attrs || [])) if (ATTRS[k]) list = list.filter(ATTRS[k]);
 
   const byBest = (a,b) => {
     const pa = priceIdx(a), pb = priceIdx(b);
@@ -1462,7 +1551,7 @@ async function search(more = false){
     if (!nextToken || !lastBody) return;
     body = {...lastBody, pageToken:nextToken};
   } else {
-    const c = CUISINES.find(x => x.id === prefs.cuisine) || CUISINES[0];
+    const c = prefs.cuisine === "custom" && prefs.customQ ? {q:prefs.customQ} : (CUISINES.find(x => x.id === prefs.cuisine) || CUISINES[0]);
     body = {textQuery:c.q, languageCode:LANGS[prefs.lang].google, pageSize:20};
     if (prefs.mode === "city"){
       const city = $("#city").value.trim();
@@ -1629,11 +1718,36 @@ $("#recent").addEventListener("click", e => {
   if (e.target.closest("#btnClearRecent")){ prefs.recentCities = []; savePrefs(); renderRecent(); }
 });
 $("#btnSearch").addEventListener("click", () => search(false));
+/* Vyhľadávanie v kategóriách (bez Google) a vlastné hľadanie (počíta sa ako bežné vyhľadávanie) */
+function pickCategory(c){
+  prefs.cuisine = c.id; prefs.group = c.group; prefs.customQ = ""; savePrefs();
+  $("#catSearch").value = ""; $("#catSearch").blur(); delete $("#cuisines").dataset.group;
+  renderControls();
+}
+function pickCustom(q){
+  prefs.cuisine = "custom"; prefs.customQ = q.trim(); savePrefs();
+  $("#catSearch").value = ""; $("#catSearch").blur(); delete $("#cuisines").dataset.group;
+  renderControls();
+}
+$("#catSearch").addEventListener("input", () => renderControls());
+$("#catSearch").addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  e.preventDefault();
+  const q = $("#catSearch").value.trim(); if (!q) return;
+  const exact = CUISINES.find(c => [c.label, catLabel(c), ...(CAT_I18N[c.id] || [])].some(x => normTxt(x) === normTxt(q)));
+  exact ? pickCategory(exact) : pickCustom(q);
+  search(false);
+});
+$("#catClear").addEventListener("click", () => { $("#catSearch").value = ""; renderControls(); $("#catSearch").focus(); });
+$("#customSel").addEventListener("click", e => {
+  if (e.target.closest("#customX")){ prefs.cuisine = "all"; prefs.group = "kuchyna"; prefs.customQ = ""; savePrefs(); delete $("#cuisines").dataset.group; renderControls(); }
+});
 /* Reset vyhľadávania: základné nastavenie, filtre a zoradenie, vymazaná história miest a výsledky.
    Obľúbené, kľúč, jazyk, limit a počítadlá ostávajú. Nič sa pri tom neminie. */
 $("#btnReset").addEventListener("click", () => {
   Object.assign(prefs, {mode:"near", radius:1000, city:"", group:"kuchyna", cuisine:"all",
-    minRating:0, prices:[], pay:"any", openNow:false, hideUnknown:false, sort:"best", recentCities:[]});
+    minRating:0, prices:[], pay:"any", openNow:false, hideUnknown:false, sort:"best", recentCities:[], attrs:[], customQ:""});
+  $("#catSearch").value = "";
   savePrefs();
   results = []; nextToken = null; lastBody = null; lastBrand = null; center = null;
   compare.clear(); expanded.clear();

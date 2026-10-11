@@ -46,6 +46,11 @@ button{cursor:pointer}
 .safe-cover.top{top:0;height:env(safe-area-inset-top,0px);background:var(--green)}
 .safe-cover.bottom{bottom:0;height:env(safe-area-inset-bottom,0px);background:var(--paper)}
 
+/* Pokračovanie markízy nad okrajom stránky: keď stiahneš stránku nadol (pružný posun na iPhone),
+   nevznikne prázdne miesto, pruhy pokračujú „donekonečna“. */
+.awning-ext{position:absolute;left:0;right:0;top:-150vh;height:150vh;pointer-events:none;
+  background:repeating-linear-gradient(90deg,var(--green) 0 28px,var(--stripe) 28px 56px)}
+
 /* Markíza — jediný výrazný prvok */
 .awning{
   height:calc(46px + env(safe-area-inset-top,0px));
@@ -219,6 +224,7 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
 <body>
 <div class="safe-cover top" aria-hidden="true"></div>
 <div class="safe-cover bottom" aria-hidden="true"></div>
+<div class="awning-ext" aria-hidden="true"></div>
 <div class="awning" aria-hidden="true"></div>
 <div class="wrap">
   <div class="titlebar">

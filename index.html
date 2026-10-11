@@ -33,8 +33,8 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 12px);scroll-padding-bottom:calc(env(safe-area-inset-bottom,0px) + 12px)}
-body{margin:0;overflow-x:clip;background:var(--paper);color:var(--ink);font:16px/1.45 var(--body);
+html{-webkit-text-size-adjust:100%;overflow-x:hidden;overscroll-behavior-x:none;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 12px);scroll-padding-bottom:calc(env(safe-area-inset-bottom,0px) + 12px)}
+body{margin:0;overflow-x:clip;overscroll-behavior-x:none;background:var(--paper);color:var(--ink);font:16px/1.45 var(--body);
 }
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -51,7 +51,7 @@ button{cursor:pointer}
    a pruhy plynulo pokračujú nad markízou. iPhone obsah nad začiatkom stránky nekreslí, pevné prvky áno. */
 .awning-bg{position:fixed;left:0;right:0;top:0;height:60vh;z-index:-1;pointer-events:none;
   background:repeating-linear-gradient(90deg,var(--green) 0 28px,var(--stripe) 28px 56px)}
-.page{position:relative;z-index:0;background:var(--paper);min-height:100vh;min-height:100dvh;
+.page{position:relative;z-index:0;background:var(--paper);overflow-x:clip;min-height:100vh;min-height:100dvh;
   padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px)}
 
 /* Markíza — jediný výrazný prvok */
@@ -83,6 +83,7 @@ h1{font:800 clamp(28px,8.4vw,46px)/0.95 var(--display);letter-spacing:-0.02em;ma
 .fav-list .faddr{font-size:14px;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
 .fav-list .row{margin-top:8px}
 .fav-empty{color:var(--muted)}
+.fav-usage{margin:2px 0 0;font-size:12px;color:var(--muted)}
 .fav-list .fname{display:block;text-align:left}
 .fav-detail{margin-top:10px}
 .fav-detail .note.err{color:var(--tomato)}
@@ -240,6 +241,7 @@ dialog{border:0;border-radius:18px;padding:0;width:min(560px,calc(100vw - 24px))
   max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 24px);
   overflow-y:auto;-webkit-overflow-scrolling:touch;
   background:var(--surface);color:var(--ink)}
+dialog:focus{outline:none}
 dialog::backdrop{background:rgba(10,20,15,.55)}
 .dlg{padding:20px}
 .dlg h2{font:800 26px/1.1 var(--display);margin:0 0 14px}
@@ -334,7 +336,7 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
   <button class="btn" id="btnCompare" type="button" data-i18n="compare">Porovnať</button>
 </div>
 
-<dialog id="dlgSettings">
+<dialog id="dlgSettings" tabindex="-1">
   <div class="dlg">
     <h2 data-i18n="settings">Nastavenia</h2>
     <p><strong data-i18n="lang">Jazyk</strong></p>
@@ -371,15 +373,16 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
       <button class="btn" id="btnSetUsage" type="button" data-i18n="setCounter">Nastaviť počítadlo</button>
     </div>
     <div class="row" style="margin-top:16px">
-      <button class="btn primary" id="btnCloseSettings" type="button" autofocus data-i18n="done">Hotovo</button>
+      <button class="btn primary" id="btnCloseSettings" type="button" data-i18n="done">Hotovo</button>
     </div>
   </div>
 </dialog>
 
-<dialog id="dlgFavs">
+<dialog id="dlgFavs" tabindex="-1">
   <div class="dlg">
     <h2 data-i18n="favTitle">Obľúbené</h2>
     <p class="note" data-i18n="favNote">Obľúbené sú uložené len v tomto telefóne.</p>
+    <p class="fav-usage" id="favUsage"></p>
     <ul class="fav-list" id="favList"></ul>
     <div class="row" style="margin-top:16px">
       <button class="btn primary" id="btnCloseFavs" type="button" data-i18n="close">Zavrieť</button>
@@ -387,7 +390,7 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
   </div>
 </dialog>
 
-<dialog id="dlgCompare">
+<dialog id="dlgCompare" tabindex="-1">
   <div class="dlg">
     <h2 data-i18n="cmpTitle">Porovnanie</h2>
     <div class="cmp-scroll" id="cmpTable"></div>
@@ -549,7 +552,7 @@ sk:{
   langNote:"Názvy typov podnikov a recenzie od Google sa zmenia pri ďalšom hľadaní.",
   favTitle:"Obľúbené", favAdd:"Pridať do obľúbených", favRemove:"Odobrať z obľúbených", favRemoveBtn:"Odobrať",
   favNote:"Obľúbené sú uložené len v tomto telefóne. Ťuknutím na názov načítaš aktuálne údaje.",
-  dTitle:"Detaily obľúbených tento mesiac", loading:"Načítavam…",
+  dTitle:"Detaily obľúbených tento mesiac", dCounter:"Načítané detaily tento mesiac: {u} z {l}", loading:"Načítavam…",
   dNote:"Rozkliknutie obľúbeného podniku načíta aktuálne údaje z Google. Google to počíta zvlášť a dáva na to ďalších 1 000 zadarmo mesačne, takže to neminie vyhľadávania. Platí rovnaký limit pre tento telefón. Ten istý podnik sa počas jedného spustenia appky započíta len raz.",
   dLimit:"Limit {l} načítaní detailov pre tento telefón je na tento mesiac vyčerpaný. Navigovať a V Mapách fungujú ďalej.", favEmpty:"Zatiaľ nemáš žiadne obľúbené podniky. Pridáš ich srdiečkom pri podniku vo výsledkoch."
 },
@@ -608,7 +611,7 @@ cs:{
   langNote:"Názvy typů podniků a recenze od Google se změní při dalším hledání.",
   favTitle:"Oblíbené", favAdd:"Přidat do oblíbených", favRemove:"Odebrat z oblíbených", favRemoveBtn:"Odebrat",
   favNote:"Oblíbené jsou uložené jen v tomto telefonu. Klepnutím na název načteš aktuální údaje.",
-  dTitle:"Detaily oblíbených tento měsíc", loading:"Načítám…",
+  dTitle:"Detaily oblíbených tento měsíc", dCounter:"Načtené detaily tento měsíc: {u} z {l}", loading:"Načítám…",
   dNote:"Rozkliknutí oblíbeného podniku načte aktuální údaje z Google. Google to počítá zvlášť a dává na to dalších 1 000 zdarma měsíčně, takže to nespotřebuje vyhledávání. Platí stejný limit pro tento telefon. Stejný podnik se během jednoho spuštění aplikace započítá jen jednou.",
   dLimit:"Limit {l} načtení detailů pro tento telefon je na tento měsíc vyčerpán. Navigovat a V Mapách fungují dál.", favEmpty:"Zatím nemáš žádné oblíbené podniky. Přidáš je srdíčkem u podniku ve výsledcích."
 },
@@ -667,7 +670,7 @@ en:{
   langNote:"Place types and reviews from Google switch language with your next search.",
   favTitle:"Favourites", favAdd:"Add to favourites", favRemove:"Remove from favourites", favRemoveBtn:"Remove",
   favNote:"Favourites are stored on this phone only. Tap a name to load up-to-date details.",
-  dTitle:"Favourite details this month", loading:"Loading…",
+  dTitle:"Favourite details this month", dCounter:"Details loaded this month: {u} of {l}", loading:"Loading…",
   dNote:"Opening a favourite loads up-to-date details from Google. Google counts this separately with another 1,000 free per month, so it doesn't use up your searches. The same limit for this phone applies. Opening the same place again while the app is open counts only once.",
   dLimit:"This phone's limit of {l} detail loads for this month is used up. Directions and In Maps still work.", favEmpty:"No favourites yet. Add places with the heart next to them in the results."
 }};
@@ -810,6 +813,7 @@ function renderUsage(){
   $("#limitInput").value = LIMIT();
   $("#usageInput").value = u.monthCount;
   $("#dUsageBig").textContent = t("usageBig", {u:dUsage().monthCount, l:LIMIT()});
+  $("#favUsage").textContent = t("dCounter", {u:dUsage().monthCount, l:LIMIT()});
 }
 
 /* ---------- Pomocníci ---------- */
@@ -1374,7 +1378,7 @@ async function loadFavDetail(id){
     const v = detailCache.get(key); if (v && v.error) detailCache.delete(key); // pri chybe sa dá skúsiť znova
   }
 }
-$("#btnFavs").addEventListener("click", () => { renderFavs(); const d = $("#dlgFavs"); d.showModal(); d.scrollTop = 0; });
+$("#btnFavs").addEventListener("click", () => { renderFavs(); renderUsage(); const d = $("#dlgFavs"); d.showModal(); calmFocus(d); d.scrollTop = 0; });
 $("#btnCloseFavs").addEventListener("click", () => $("#dlgFavs").close());
 $("#favList").addEventListener("click", e => {
   const find = id => getFavs().find(f => f.id === id);
@@ -1398,7 +1402,7 @@ $("#cmpTable").addEventListener("click", e => {
   const nav = e.target.closest("[data-nav]");
   if (nav){ const p = findPlace(nav.dataset.nav); if (p) openMaps(navUrl(p)); }
 });
-$("#btnCompare").addEventListener("click", () => { renderCompare(); $("#dlgCompare").showModal(); });
+$("#btnCompare").addEventListener("click", () => { renderCompare(); $("#dlgCompare").showModal(); calmFocus($("#dlgCompare")); });
 $("#btnCloseCompare").addEventListener("click", () => $("#dlgCompare").close());
 $("#btnCmpClear").addEventListener("click", () => { compare.clear(); renderResults(); });
 
@@ -1532,7 +1536,7 @@ function renderKeyState(){
   const k = getKey();
   $("#keyState").textContent = k ? t("keyEnds", {k:k.slice(-4)}) : t("keyNone");
 }
-function openSettings(){ $("#keyInput").value = ""; $("#langNote").hidden = true; renderKeyState(); renderUsage(); const d = $("#dlgSettings"); d.showModal(); d.scrollTop = 0; requestAnimationFrame(() => { d.scrollTop = 0; }); }
+function openSettings(){ $("#keyInput").value = ""; $("#langNote").hidden = true; renderKeyState(); renderUsage(); const d = $("#dlgSettings"); d.showModal(); calmFocus(d); d.scrollTop = 0; requestAnimationFrame(() => { d.scrollTop = 0; }); }
 $("#btnSettings").addEventListener("click", openSettings);
 $("#btnCloseSettings").addEventListener("click", () => $("#dlgSettings").close());
 $("#btnSaveKey").addEventListener("click", () => {
@@ -1554,6 +1558,13 @@ $("#btnSetUsage").addEventListener("click", () => {
   const n = Math.max(0, Math.min(MAX_LIMIT, parseInt($("#usageInput").value, 10) || 0));
   const u = usage(); u.monthCount = n; store.set("kj_usage", u); renderUsage();
 });
+
+/* Po otvorení okna nechceme zvýraznený prvý prvok, fokus dostane samotné okno. */
+function calmFocus(dlg){
+  dlg.focus({preventScroll:true});
+  dlg.scrollTop = 0;
+  requestAnimationFrame(() => { if (document.activeElement !== dlg) dlg.focus({preventScroll:true}); dlg.scrollTop = 0; });
+}
 
 /* ---------- Jazyk ---------- */
 function applyLang(){

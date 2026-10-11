@@ -64,6 +64,18 @@ h1{font:800 clamp(34px,10vw,46px)/0.95 var(--display);letter-spacing:-0.02em;mar
 .seg button[aria-pressed="true"]{background:var(--green);color:#fff}
 
 .field{margin-top:12px}
+.city-wrap{position:relative}
+.sug{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;list-style:none;margin:0;padding:6px;
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.22);
+  max-height:300px;overflow-y:auto}
+.sug button{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;
+  border:0;background:none;padding:11px 10px;border-radius:8px;font-size:16px}
+.sug button:active{background:var(--paper)}
+.sug .hint{color:var(--muted);font-size:13px;white-space:nowrap}
+.recent{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.recent .lbl{font-size:14px;color:var(--muted);margin-right:2px}
+.recent .chip{padding:6px 12px;font-size:14px}
+.recent .clear{border:0;background:none;color:var(--muted);font-size:14px;text-decoration:underline;padding:6px 4px}
 .tabs{display:flex;flex-wrap:nowrap;gap:22px;margin:20px -18px 10px;padding:0 18px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pan-y;
   scrollbar-width:none;box-shadow:inset 0 -1px 0 var(--line);
   -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 36px),transparent);
@@ -181,7 +193,11 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
       <div class="chips" id="radii"></div>
     </div>
     <div id="cityOpts" class="field" hidden>
-      <input id="city" type="text" placeholder="Napr. Brno, Bratislava, Košice" autocomplete="address-level2" enterkeyhint="search">
+      <div class="city-wrap">
+        <input id="city" type="text" placeholder="Napr. Brno, Bratislava, Košice" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search" role="combobox" aria-autocomplete="list" aria-controls="citySug" aria-expanded="false">
+        <ul id="citySug" class="sug" role="listbox" hidden></ul>
+      </div>
+      <div id="recent" class="recent" hidden></div>
     </div>
     <div class="tabs" id="groups" role="tablist"></div>
     <div class="chips scroll" id="cuisines"></div>
@@ -325,6 +341,7 @@ const GROUPS = [
   ]},
   {id:"sladke", label:"Kaviarne a sladké", items:[
     {id:"cafe", label:"Kaviareň", q:"cafe"},
+    {id:"specialty", label:"Výberová kaviareň", q:"specialty coffee"},
     {id:"cukraren", label:"Cukráreň", q:"pastry shop cukrárna"},
     {id:"pekaren", label:"Pekáreň", q:"bakery"},
     {id:"zmrzlina", label:"Zmrzlina", q:"ice cream gelato"},
@@ -352,6 +369,56 @@ const PRICE_IDX = {PRICE_LEVEL_FREE:0, PRICE_LEVEL_INEXPENSIVE:1, PRICE_LEVEL_MO
 const PRICE_NAMES = ["Zadarmo","Lacné","Stredné","Drahé","Luxusné"];
 const PAYS = [{v:"any",l:"Nezáleží"},{v:"card",l:"Kartou"},{v:"cash",l:"Len hotovosť"}];
 
+/* ---------- Mestá pre návrhy (bez Google, nič nestoja) ---------- */
+const CITIES = [
+  // Česko
+  "Praha|Prague|Prag","Praha 1","Praha 2","Praha 3","Praha 4","Praha 5","Praha 6","Praha 7","Praha 8","Praha 9","Praha 10",
+  "Staré Město, Praha","Nové Město, Praha","Malá Strana, Praha","Vinohrady, Praha","Žižkov, Praha","Karlín, Praha",
+  "Holešovice, Praha","Letná, Praha","Smíchov, Praha","Dejvice, Praha","Vršovice, Praha","Nusle, Praha","Libeň, Praha",
+  "Brno","Ostrava","Plzeň","Liberec","Olomouc","České Budějovice","Hradec Králové","Ústí nad Labem","Pardubice","Zlín",
+  "Havířov","Kladno","Most","Opava","Frýdek-Místek","Karviná","Jihlava","Teplice","Děčín","Karlovy Vary","Chomutov",
+  "Jablonec nad Nisou","Mladá Boleslav","Prostějov","Přerov","Třebíč","Česká Lípa","Třinec","Tábor","Znojmo","Kolín",
+  "Příbram","Cheb","Písek","Trutnov","Kroměříž","Mikulov","Český Krumlov","Kutná Hora","Mariánské Lázně","Telč",
+  "Lednice","Valtice","Litomyšl","Uherské Hradiště","Vsetín","Šumperk","Hodonín","Břeclav","Beroun","Benešov",
+  // Slovensko
+  "Bratislava|Pressburg","Staré Mesto, Bratislava","Petržalka, Bratislava","Ružinov, Bratislava","Nové Mesto, Bratislava",
+  "Karlova Ves, Bratislava","Dúbravka, Bratislava","Košice","Staré Mesto, Košice","Prešov","Žilina","Banská Bystrica",
+  "Nitra","Trnava","Trenčín","Martin","Poprad","Prievidza","Zvolen","Považská Bystrica","Michalovce","Nové Zámky",
+  "Spišská Nová Ves","Komárno","Levice","Humenné","Bardejov","Liptovský Mikuláš","Ružomberok","Piešťany","Topoľčany",
+  "Trebišov","Čadca","Dunajská Streda","Pezinok","Senec","Malacky","Rožňava","Kežmarok","Dolný Kubín",
+  "Banská Štiavnica","Bojnice","Levoča","Štrbské Pleso","Starý Smokovec","Senica","Skalica","Hlohovec","Galanta",
+  "Šaľa","Partizánske","Brezno","Lučenec","Rimavská Sobota","Stará Ľubovňa","Vranov nad Topľou","Svidník","Snina",
+  "Púchov","Bánovce nad Bebravou","Myjava","Nové Mesto nad Váhom","Detva","Kremnica","Turčianske Teplice",
+  // Európa
+  "Viedeň|Vienna|Wien","Salzburg","Innsbruck","Graz","Linz","Budapešť|Budapest","Krakov|Kraków|Krakow",
+  "Varšava|Warsaw|Warszawa","Vroclav|Wrocław|Wroclaw","Gdansk|Gdańsk","Katovice|Katowice","Berlín|Berlin",
+  "Mníchov|Munich|München","Drážďany|Dresden","Lipsko|Leipzig","Norimberg|Nuremberg|Nürnberg","Hamburg",
+  "Frankfurt nad Mohanom|Frankfurt","Kolín nad Rýnom|Cologne|Köln","Ľubľana|Ljubljana","Záhreb|Zagreb","Split",
+  "Dubrovník|Dubrovnik","Zadar","Belehrad|Belgrade|Beograd","Bukurešť|Bucharest|București","Sofia",
+  "Atény|Athens","Solún|Thessaloniki","Rím|Rome|Roma","Miláno|Milan|Milano","Benátky|Venice|Venezia",
+  "Florencia|Florence|Firenze","Neapol|Naples|Napoli","Bologna","Turín|Turin|Torino","Verona","Paríž|Paris",
+  "Nice|Nizza","Lyon","Marseille","Londýn|London","Edinburgh","Dublin","Amsterdam","Brusel|Brussels|Bruxelles",
+  "Bruggy|Bruges|Brugge","Luxemburg|Luxembourg","Zürich|Zurich","Ženeva|Geneva|Genève","Madrid","Barcelona",
+  "Valencia","Sevilla|Seville","Málaga","Palma de Mallorca","Lisabon|Lisbon|Lisboa","Porto","Kodaň|Copenhagen|København",
+  "Štokholm|Stockholm","Oslo","Helsinki","Tallinn","Riga","Vilnius","Istanbul|İstanbul","Valletta"
+];
+const normTxt = t => (t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+const CITY_INDEX = CITIES.map(e => { const parts = e.split("|"); return {name:parts[0], alias:parts.slice(1), keys:parts.map(normTxt)}; });
+function citySuggestions(q){
+  const n = normTxt(q);
+  if (!n) return [];
+  const recent = (prefs.recentCities || []).filter(c => normTxt(c).includes(n)).map(c => ({name:c, recent:true}));
+  const taken = new Set(recent.map(r => normTxt(r.name)));
+  const keyStart = [], wordStart = [], contains = [];
+  for (const c of CITY_INDEX){
+    if (taken.has(c.keys[0])) continue;
+    if (c.keys.some(k => k.startsWith(n))) keyStart.push(c);
+    else if (c.keys.some(k => k.split(/[\s,\-–()]+/).some(w => w.startsWith(n)))) wordStart.push(c);
+    else if (n.length >= 3 && c.keys.some(k => k.includes(n))) contains.push(c);
+  }
+  return [...recent, ...keyStart, ...wordStart, ...contains].slice(0, 7);
+}
+
 /* ---------- Úložisko ---------- */
 const store = {
   get(k, d){ try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
@@ -360,7 +427,8 @@ const store = {
 };
 const prefs = Object.assign({
   mode:"near", radius:3000, city:"", cuisine:"all", group:"kuchyna",
-  minRating:0, prices:[], pay:"any", openNow:false, hideUnknown:false, sort:"best", gmApp:true, monthLimit:900
+  minRating:0, prices:[], pay:"any", openNow:false, hideUnknown:false, sort:"best", gmApp:true, monthLimit:900,
+  recentCities:[]
 }, store.get("kj_prefs", {}));
 const savePrefs = () => store.set("kj_prefs", prefs);
 const LIMIT = () => Math.max(0, Math.min(MAX_LIMIT, parseInt(prefs.monthLimit, 10) || 0));
@@ -496,7 +564,8 @@ function renderControls(){
   document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === prefs.mode ? "true" : "false"));
   $("#nearOpts").hidden = prefs.mode !== "near";
   $("#cityOpts").hidden = prefs.mode !== "city";
-  $("#city").value = prefs.city;
+  if (document.activeElement !== $("#city")) $("#city").value = prefs.city;
+  renderRecent();
 
   const radii = $("#radii"); radii.replaceChildren();
   RADII.forEach(r => radii.append(chip(`${r/1000} km`, prefs.radius === r, () => { prefs.radius = r; savePrefs(); renderControls(); })));
@@ -780,6 +849,7 @@ async function search(more = false){
     }
   }
 
+  if (!more && prefs.mode === "city") addRecent(prefs.city);
   let places = data.places || [];
   const sel = CUISINES.find(x => x.id === prefs.cuisine);
   if (sel && sel.brand && !more){
@@ -835,7 +905,48 @@ $("#btnSetUsage").addEventListener("click", () => {
 
 /* ---------- Udalosti ---------- */
 document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => { prefs.mode = b.dataset.mode; savePrefs(); renderControls(); }));
-$("#city").addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); search(); } });
+$("#city").addEventListener("keydown", e => {
+  if (e.key === "Enter"){ e.preventDefault(); hideSug(); $("#city").blur(); search(); }
+  if (e.key === "Escape") hideSug();
+});
+$("#city").addEventListener("input", () => { prefs.city = $("#city").value; savePrefs(); showSug(); });
+$("#city").addEventListener("focus", showSug);
+$("#city").addEventListener("blur", () => setTimeout(hideSug, 150));
+$("#citySug").addEventListener("pointerdown", e => e.preventDefault());
+$("#citySug").addEventListener("click", e => {
+  const b = e.target.closest("[data-city]"); if (!b) return;
+  pickCity(b.dataset.city);
+});
+function pickCity(name){
+  $("#city").value = name; prefs.city = name; savePrefs();
+  hideSug(); $("#city").blur();
+  setStatus(`Mesto: ${name}. Ťukni na Hľadať.`);
+}
+function showSug(){
+  const list = citySuggestions($("#city").value), ul = $("#citySug");
+  if (!list.length || document.activeElement !== $("#city")){ hideSug(); return; }
+  ul.innerHTML = list.map(c => `<li role="option"><button type="button" data-city="${esc(c.name)}"><span>${esc(c.name)}</span>${c.recent ? `<span class="hint">naposledy</span>` : ""}</button></li>`).join("");
+  ul.hidden = false; $("#city").setAttribute("aria-expanded","true");
+}
+function hideSug(){ $("#citySug").hidden = true; $("#city").setAttribute("aria-expanded","false"); }
+function addRecent(name){
+  const n = normTxt(name); if (!n) return;
+  prefs.recentCities = [name, ...(prefs.recentCities || []).filter(c => normTxt(c) !== n)].slice(0, 6);
+  savePrefs(); renderRecent();
+}
+function renderRecent(){
+  const box = $("#recent"), list = prefs.recentCities || [];
+  box.hidden = !list.length;
+  if (!list.length){ box.replaceChildren(); return; }
+  box.innerHTML = `<span class="lbl">Naposledy:</span>` +
+    list.map(c => `<button type="button" class="chip" data-recent="${esc(c)}">${esc(c)}</button>`).join("") +
+    `<button type="button" class="clear" id="btnClearRecent">Vymazať</button>`;
+}
+$("#recent").addEventListener("click", e => {
+  const b = e.target.closest("[data-recent]");
+  if (b){ pickCity(b.dataset.recent); return; }
+  if (e.target.closest("#btnClearRecent")){ prefs.recentCities = []; savePrefs(); renderRecent(); }
+});
 $("#btnSearch").addEventListener("click", () => search(false));
 $("#btnMore").addEventListener("click", () => search(true));
 $("#fOpen").addEventListener("change", e => { prefs.openNow = e.target.checked; savePrefs(); renderControls(); renderResults(); });

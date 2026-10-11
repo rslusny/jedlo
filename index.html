@@ -34,7 +34,7 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 12px);scroll-padding-bottom:calc(env(safe-area-inset-bottom,0px) + 12px)}
-body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.45 var(--body);
+body{margin:0;overflow-x:clip;background:var(--paper);color:var(--ink);font:16px/1.45 var(--body);
   padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px)}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -136,10 +136,13 @@ ol.results{list-style:none;margin:0;padding:0}
 .price .dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--mustard)}
 .price .dot.on{background:var(--mustard)}
 .price .plab{display:block;font-size:12px;font-weight:600;margin-top:4px}
-.price .prng{display:block;font:700 15px/1.15 var(--display);margin-top:4px;white-space:nowrap}
+.price .prng{display:block;font:700 15px/1.15 var(--display);margin-top:4px;overflow-wrap:anywhere}
 .price .pper{display:block;font-size:11px;color:var(--muted)}
 .price .unk{display:block;font-size:11px;color:var(--muted)}
-.place h3{font:700 19px/1.2 var(--display);margin:0 0 4px}
+.place > div{min-width:0}
+.place h3{font:700 19px/1.2 var(--display);margin:0 0 4px;overflow-wrap:anywhere}
+.addr,.meta,.auto-desc,.review blockquote{overflow-wrap:anywhere}
+.price .plab,.price .unk{overflow-wrap:anywhere;hyphens:auto}
 .name-btn{all:unset;cursor:pointer;display:inline;font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
 .name-btn:focus-visible{outline:3px solid var(--mustard);outline-offset:2px;border-radius:4px}
 .chev{display:inline-block;width:8px;height:8px;margin:0 10px 0 2px;border-right:2.5px solid var(--mustard);border-bottom:2.5px solid var(--mustard);
@@ -148,7 +151,7 @@ ol.results{list-style:none;margin:0;padding:0}
 .more-info{margin-top:10px;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-size:15px}
 .contact{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .contact .btn{color:var(--ink);display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;max-width:100%}
-.contact .sub{font-size:12px;font-weight:500;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+.contact .sub{font-size:12px;font-weight:500;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
 .more-info .none{margin:0;color:var(--muted);font-size:14px}
 .auto-desc{margin:0 0 12px;font-size:15px;line-height:1.5}
 .auto-desc + .oh, .oh + .contact{margin-top:0}
@@ -166,13 +169,15 @@ ol.results{list-style:none;margin:0;padding:0}
 .oh-status.is-closed{color:var(--tomato)} .oh-status.is-closed .oh-dot{background:var(--tomato)}
 .oh-sub{font-weight:500;color:var(--muted)}
 .oh-table{margin:10px -6px 0}
-.oh-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:6px 8px;border-radius:8px;font-size:14px}
+.oh-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 12px;padding:6px 8px;border-radius:8px;font-size:14px}
 .oh-row + .oh-row{border-top:1px solid var(--line)}
 .oh-row.today{background:color-mix(in srgb,var(--mustard) 18%,transparent);border-top-color:transparent;font-weight:700}
 .oh-row.today + .oh-row{border-top-color:transparent}
 .oh-day{display:flex;align-items:center;gap:6px}
 .oh-today{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mustard-ink);background:var(--mustard);border-radius:4px;padding:1px 5px}
-.oh-time{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.oh-time{text-align:right;font-variant-numeric:tabular-nums;min-width:0;margin-left:auto}
+.oh-time .rng{white-space:nowrap}
+.oh-day{flex:none}
 .oh-time.closed{color:var(--muted);font-weight:500}
 
 @media (prefers-reduced-motion: reduce){.chev{transition:none}}
@@ -197,7 +202,8 @@ footer p{margin:4px 0}
   padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;align-items:center;justify-content:center}
 .cmpbar .btn{background:#fff;color:var(--green);border-color:#fff}
 .cmpbar .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
-.cmpbar span{margin-right:auto;font-weight:600}
+.cmpbar span{margin-right:auto;font-weight:600;min-width:0;flex:1 1 auto;line-height:1.25}
+.cmpbar .btn{flex:none}
 
 dialog{border:0;border-radius:18px;padding:0;width:min(560px,calc(100vw - 24px));
   margin:calc(env(safe-area-inset-top,0px) + 12px) auto calc(env(safe-area-inset-bottom,0px) + 12px);
@@ -789,11 +795,24 @@ function priceBlock(p){
     const cur = curSymbol(r.startPrice.currencyCode);
     const a = nf0.format(Number(r.startPrice.units||0));
     const b = r.endPrice ? nf0.format(Number(r.endPrice.units||0)) : null;
-    html += `<span class="prng">${b ? `${a}–${b}` : t("from", {a})}</span><span class="pper">${esc(t("perPerson", {c:cur}))}</span>`;
+    html += `<span class="prng">${b ? `${a}–<wbr>${b}` : t("from", {a})}</span><span class="pper">${esc(t("perPerson", {c:cur}))}</span>`;
   }
   return html + `</div>`;
 }
-const hhmm = (h, m) => `${h}:${String(m).padStart(2, "0")}`;
+const hhmm = (h, m) => {
+  if (prefs.lang === "en"){
+    const h12 = ((h + 11) % 12) + 1;
+    return `${h12}${m ? ":" + String(m).padStart(2, "0") : ""}\u202f${h < 12 ? "AM" : "PM"}`;
+  }
+  return `${h}:${String(m).padStart(2, "0")}`;
+};
+/* Hodiny od Google v angličtine skrátime: „10:00 AM – 10:00 PM“ → „10 AM – 10 PM“ */
+function tidyHours(txt){
+  return txt.replace(/[\u2009\u202f\u00a0]/g, " ")
+    .replace(/(\d{1,2}):00\s?([AP]M)/g, "$1\u202f$2")
+    .replace(/(\d{1,2}:\d{2})\s?([AP]M)/g, "$1\u202f$2")
+    .replace(/\s*[–-]\s*/g, " – ");
+}
 function placeNow(p){
   // čas v mieste podniku (dôležité pri hľadaní v inom časovom pásme)
   const off = typeof p.utcOffsetMinutes === "number" ? p.utcOffsetMinutes : -new Date().getTimezoneOffset();
@@ -919,7 +938,7 @@ function moreInfo(p){
       html += `<div class="oh-table">` + days.map((line, i) => {
         const hours = line.replace(/^[^:]+:\s*/, "");
         const closed = /zatvoren|zavřen|closed/i.test(hours);
-        const parts = hours.split(/,\s*/).map(esc).join("<br>");
+        const parts = tidyHours(hours).split(/,\s*/).map(x => `<span class="rng">${esc(x)}</span>`).join("<br>");
         return `<div class="oh-row${i === idx ? " today" : ""}"><span class="oh-day">${t("days")[i]}${i === idx ? `<span class="oh-today">${t("today")}</span>` : ""}</span><span class="oh-time${closed ? " closed" : ""}">${parts}</span></div>`;
       }).join("") + `</div>`;
     }

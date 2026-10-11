@@ -137,6 +137,10 @@ input[type=text],input[type=password],select{width:100%;border:1px solid var(--l
 .search-btn{width:100%;margin-top:18px;border:0;border-radius:14px;background:var(--green);color:#fff;
   font:700 19px/1 var(--display);padding:17px}
 .search-btn:disabled{opacity:.6}
+.reset-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px auto 0;border:0;background:none;
+  color:var(--muted);font-size:15px;padding:8px 12px;border-radius:10px}
+.reset-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.reset-btn:active{background:var(--surface)}
 
 details.filters{margin-top:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 details.filters summary{list-style:none;padding:14px 0;font-weight:600;display:flex;justify-content:space-between;align-items:center}
@@ -288,6 +292,7 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
     <div class="tabs" id="groups" role="tablist"></div>
     <div class="chips scroll" id="cuisines"></div>
     <button id="btnSearch" class="search-btn" type="button" data-i18n="search">Hľadať</button>
+    <button id="btnReset" class="reset-btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span data-i18n="reset">Resetovať vyhľadávanie</span></button>
   </section>
 
   <details class="filters" id="filtersBox">
@@ -490,6 +495,7 @@ function detectLang(){
 }
 const T = {
 sk:{
+  reset:"Resetovať vyhľadávanie", resetDone:"Vyhľadávanie je nastavené odznova. Obľúbené, kľúč a nastavenia ostali.",
   title:"Kam na jedlo", settings:"Nastavenia", searchAria:"Vyhľadávanie", near:"V okolí", city:"V meste",
   cityPh:"Napr. Brno, Bratislava, Košice", search:"Hľadať", filters:"Filtre a zoradenie", filtersActive:"Filtre a zoradenie (aktívne: {n})",
   fRating:"Hodnotenie", fPrice:"Cena", fPay:"Platba", fOpen:"Len teraz otvorené", fHide:"Skryť podniky bez údaja o cene alebo platbe",
@@ -548,6 +554,7 @@ sk:{
   dLimit:"Limit {l} načítaní detailov pre tento telefón je na tento mesiac vyčerpaný. Navigovať a V Mapách fungujú ďalej.", favEmpty:"Zatiaľ nemáš žiadne obľúbené podniky. Pridáš ich srdiečkom pri podniku vo výsledkoch."
 },
 cs:{
+  reset:"Resetovat vyhledávání", resetDone:"Vyhledávání je nastaveno od začátku. Oblíbené, klíč a nastavení zůstaly.",
   title:"Kam na jídlo", settings:"Nastavení", searchAria:"Vyhledávání", near:"V okolí", city:"Ve městě",
   cityPh:"Např. Brno, Praha, Ostrava", search:"Hledat", filters:"Filtry a řazení", filtersActive:"Filtry a řazení (aktivní: {n})",
   fRating:"Hodnocení", fPrice:"Cena", fPay:"Platba", fOpen:"Jen nyní otevřené", fHide:"Skrýt podniky bez údaje o ceně nebo platbě",
@@ -606,6 +613,7 @@ cs:{
   dLimit:"Limit {l} načtení detailů pro tento telefon je na tento měsíc vyčerpán. Navigovat a V Mapách fungují dál.", favEmpty:"Zatím nemáš žádné oblíbené podniky. Přidáš je srdíčkem u podniku ve výsledcích."
 },
 en:{
+  reset:"Reset search", resetDone:"Search has been reset. Favourites, key and settings were kept.",
   title:"Where to Eat", settings:"Settings", searchAria:"Search", near:"Nearby", city:"In a city",
   cityPh:"E.g. Prague, Vienna, Brno", search:"Search", filters:"Filters & sorting", filtersActive:"Filters & sorting ({n} active)",
   fRating:"Rating", fPrice:"Price", fPay:"Payment", fOpen:"Open now only", fHide:"Hide places without price or payment info",
@@ -764,7 +772,7 @@ const store = {
 const HAD_PREFS = store.get("kj_prefs", null) !== null;
 const prefs = Object.assign({
   lang: HAD_PREFS ? "sk" : detectLang(),
-  mode:"near", radius:3000, city:"", cuisine:"all", group:"kuchyna",
+  mode:"near", radius:1000, city:"", cuisine:"all", group:"kuchyna",
   minRating:0, prices:[], pay:"any", openNow:false, hideUnknown:false, sort:"best", gmApp:true, monthLimit:900,
   recentCities:[]
 }, store.get("kj_prefs", {}));
@@ -1610,6 +1618,21 @@ $("#recent").addEventListener("click", e => {
   if (e.target.closest("#btnClearRecent")){ prefs.recentCities = []; savePrefs(); renderRecent(); }
 });
 $("#btnSearch").addEventListener("click", () => search(false));
+/* Reset vyhľadávania: základné nastavenie, filtre a zoradenie, vymazaná história miest a výsledky.
+   Obľúbené, kľúč, jazyk, limit a počítadlá ostávajú. Nič sa pri tom neminie. */
+$("#btnReset").addEventListener("click", () => {
+  Object.assign(prefs, {mode:"near", radius:1000, city:"", group:"kuchyna", cuisine:"all",
+    minRating:0, prices:[], pay:"any", openNow:false, hideUnknown:false, sort:"best", recentCities:[]});
+  savePrefs();
+  results = []; nextToken = null; lastBody = null; lastBrand = null; center = null;
+  compare.clear(); expanded.clear();
+  $("#city").value = ""; hideSug();
+  $("#filtersBox").open = false;
+  $("#groups").scrollLeft = 0; $("#cuisines").scrollLeft = 0; delete $("#cuisines").dataset.group;
+  renderControls(); renderResults();
+  setStatus(t("resetDone"));
+  window.scrollTo({top:0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+});
 $("#btnMore").addEventListener("click", () => search(true));
 $("#fOpen").addEventListener("change", e => { prefs.openNow = e.target.checked; savePrefs(); renderControls(); renderResults(); });
 $("#fHideUnknown").addEventListener("change", e => { prefs.hideUnknown = e.target.checked; savePrefs(); renderControls(); renderResults(); });

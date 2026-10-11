@@ -35,7 +35,7 @@
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 12px);scroll-padding-bottom:calc(env(safe-area-inset-bottom,0px) + 12px)}
 body{margin:0;overflow-x:clip;background:var(--paper);color:var(--ink);font:16px/1.45 var(--body);
-  padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px)}
+}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
@@ -46,10 +46,13 @@ button{cursor:pointer}
 .safe-cover.top{top:0;height:env(safe-area-inset-top,0px);background:var(--green)}
 .safe-cover.bottom{bottom:0;height:env(safe-area-inset-bottom,0px);background:var(--paper)}
 
-/* Pokračovanie markízy nad okrajom stránky: keď stiahneš stránku nadol (pružný posun na iPhone),
-   nevznikne prázdne miesto, pruhy pokračujú „donekonečna“. */
-.awning-ext{position:absolute;left:0;right:0;top:-150vh;height:150vh;pointer-events:none;
+/* „Nekonečná“ markíza: pruhy sú pevne za celou stránkou. Stránka má vlastné pozadie, takže ich
+   bežne nevidno. Keď ju na iPhone stiahneš nadol (pružný posun), odkryje sa práve tento pevný pás
+   a pruhy plynulo pokračujú nad markízou. iPhone obsah nad začiatkom stránky nekreslí, pevné prvky áno. */
+.awning-bg{position:fixed;left:0;right:0;top:0;height:60vh;z-index:-1;pointer-events:none;
   background:repeating-linear-gradient(90deg,var(--green) 0 28px,var(--stripe) 28px 56px)}
+.page{position:relative;z-index:0;background:var(--paper);min-height:100vh;min-height:100dvh;
+  padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px)}
 
 /* Markíza — jediný výrazný prvok */
 .awning{
@@ -230,7 +233,8 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
 <body>
 <div class="safe-cover top" aria-hidden="true"></div>
 <div class="safe-cover bottom" aria-hidden="true"></div>
-<div class="awning-ext" aria-hidden="true"></div>
+<div class="awning-bg" aria-hidden="true"></div>
+<div class="page">
 <div class="awning" aria-hidden="true"></div>
 <div class="wrap">
   <div class="titlebar">
@@ -291,6 +295,7 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
     <p data-i18n="attribution">Údaje o podnikoch: Google Maps</p>
   </footer>
 </div>
+</div><!-- /.page -->
 
 <div class="cmpbar" id="cmpBar" hidden>
   <span id="cmpCount"></span>

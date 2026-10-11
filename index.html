@@ -137,20 +137,39 @@ ol.results{list-style:none;margin:0;padding:0}
 .place h3{font:700 19px/1.2 var(--display);margin:0 0 4px}
 .name-btn{all:unset;cursor:pointer;display:inline;font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
 .name-btn:focus-visible{outline:3px solid var(--mustard);outline-offset:2px;border-radius:4px}
-.chev{display:inline-block;width:8px;height:8px;margin-left:8px;border-right:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);
-  transform:translateY(-4px) rotate(45deg);transition:transform .15s}
-.name-btn[aria-expanded="true"] .chev{transform:translateY(-1px) rotate(-135deg)}
+.chev{display:inline-block;width:8px;height:8px;margin:0 10px 0 2px;border-right:2.5px solid var(--mustard);border-bottom:2.5px solid var(--mustard);
+  transform:translateY(-3px) rotate(-45deg);transition:transform .15s}
+.name-btn[aria-expanded="true"] .chev{transform:translateY(-5px) rotate(45deg)}
 .more-info{margin-top:10px;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-size:15px}
-.more-info .desc{margin:0}
 .contact{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .contact .btn{color:var(--ink);display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;max-width:100%}
 .contact .sub{font-size:12px;font-weight:500;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
-.more-info .desc.none{color:var(--muted);font-size:14px}
-.more-info .hours{margin:10px 0 0}
-.more-info .week{margin-top:6px;font-size:14px}
-.more-info .week summary{color:var(--muted);cursor:pointer}
-.more-info .week ul{margin:6px 0 0;padding-left:18px}
-.more-info .week li.today{font-weight:700}
+.more-info .none{margin:0;color:var(--muted);font-size:14px}
+.auto-desc{margin:0 0 12px;font-size:15px;line-height:1.5}
+.auto-desc + .oh, .oh + .contact{margin-top:0}
+.oh + .contact{margin-top:12px}
+.review{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line)}
+.rv-stars{color:var(--mustard);letter-spacing:2px;font-size:14px}
+.rv-stars span{color:var(--line)}
+.review blockquote{margin:6px 0 0;font-size:15px;line-height:1.5;font-style:italic}
+.review figcaption{margin-top:6px;font-size:13px;color:var(--muted)}
+.review figcaption a{color:inherit}
+.linklike{border:0;background:none;padding:0;color:inherit;text-decoration:underline;font:inherit;cursor:pointer}
+.oh-status{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-weight:700}
+.oh-dot{width:9px;height:9px;border-radius:50%;flex:none}
+.oh-status.is-open{color:var(--ok)} .oh-status.is-open .oh-dot{background:var(--ok)}
+.oh-status.is-closed{color:var(--tomato)} .oh-status.is-closed .oh-dot{background:var(--tomato)}
+.oh-sub{font-weight:500;color:var(--muted)}
+.oh-table{margin:10px -6px 0}
+.oh-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:6px 8px;border-radius:8px;font-size:14px}
+.oh-row + .oh-row{border-top:1px solid var(--line)}
+.oh-row.today{background:color-mix(in srgb,var(--mustard) 18%,transparent);border-top-color:transparent;font-weight:700}
+.oh-row.today + .oh-row{border-top-color:transparent}
+.oh-day{display:flex;align-items:center;gap:6px}
+.oh-today{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mustard-ink);background:var(--mustard);border-radius:4px;padding:1px 5px}
+.oh-time{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.oh-time.closed{color:var(--muted);font-weight:500}
+
 @media (prefers-reduced-motion: reduce){.chev{transition:none}}
 .meta{margin:0;font-size:15px}
 .addr{margin:2px 0 0;font-size:14px;color:var(--muted)}
@@ -323,10 +342,16 @@ const ENDPOINT = "https://places.googleapis.com/v1/places:searchText";
 const BASE_FIELDS = ["places.id","places.displayName","places.formattedAddress","places.location",
   "places.rating","places.userRatingCount","places.priceLevel","places.paymentOptions",
   "places.googleMapsUri","places.businessStatus"];
-// editorialSummary patrí do rovnakej cenovej úrovne Google ako paymentOptions, ktoré appka už načítava,
+// Všetky tieto polia patria do rovnakej cenovej úrovne Google ako paymentOptions, ktoré appka už načítava,
 // takže vyhľadávanie nestojí nič navyše.
-let OPTIONAL_FIELDS = ["places.priceRange","places.primaryTypeDisplayName","places.currentOpeningHours","places.editorialSummary",
-  "places.nationalPhoneNumber","places.internationalPhoneNumber","places.websiteUri"];
+let OPTIONAL_FIELDS = ["places.priceRange","places.primaryTypeDisplayName","places.currentOpeningHours","places.utcOffsetMinutes",
+  "places.nationalPhoneNumber","places.internationalPhoneNumber","places.websiteUri",
+  // vlastnosti pre automatický popis a jedna recenzia
+  "places.servesBreakfast","places.servesBrunch","places.servesLunch","places.servesDinner",
+  "places.servesVegetarianFood","places.servesDessert","places.servesCoffee","places.servesBeer","places.servesWine",
+  "places.servesCocktails","places.outdoorSeating","places.liveMusic","places.goodForChildren","places.menuForChildren",
+  "places.goodForGroups","places.goodForWatchingSports","places.allowsDogs","places.accessibilityOptions",
+  "places.reservable","places.takeout","places.delivery","places.parkingOptions","places.reviews"];
 
 const GROUPS = [
   {id:"kuchyna", label:"Kuchyňa", items:[
@@ -544,10 +569,140 @@ function priceBlock(p){
   }
   return html + `</div>`;
 }
+const DAY_NAMES = ["Pondelok","Utorok","Streda","Štvrtok","Piatok","Sobota","Nedeľa"];
+const DAY_IN = ["v nedeľu","v pondelok","v utorok","v stredu","vo štvrtok","v piatok","v sobotu"]; // podľa Google: 0 = nedeľa
+const hhmm = (h, m) => `${h}:${String(m).padStart(2, "0")}`;
+function placeNow(p){
+  // čas v mieste podniku (dôležité pri hľadaní v inom časovom pásme)
+  const off = typeof p.utcOffsetMinutes === "number" ? p.utcOffsetMinutes : -new Date().getTimezoneOffset();
+  return new Date(Date.now() + off * 60000);
+}
+function openStatus(p){
+  const oh = p.currentOpeningHours; if (!oh) return null;
+  const per = oh.periods || [];
+  const now = placeNow(p);
+  const nowW = now.getUTCDay()*1440 + now.getUTCHours()*60 + now.getUTCMinutes();
+  const W = 10080, mins = t => t.day*1440 + (t.hour||0)*60 + (t.minute||0);
+  if (per.length === 1 && per[0].open && !per[0].close) return {open:true, text:"Otvorené", sub:"nonstop"};
+  if (oh.openNow === true){
+    for (const x of per){
+      if (!x.open || !x.close) continue;
+      let o = mins(x.open), c = mins(x.close); if (c <= o) c += W;
+      if ((nowW >= o && nowW < c) || (nowW + W >= o && nowW + W < c))
+        return {open:true, text:"Otvorené", sub:`zatvára o ${hhmm(x.close.hour||0, x.close.minute||0)}`};
+    }
+    return {open:true, text:"Otvorené", sub:""};
+  }
+  if (oh.openNow === false){
+    let best = null;
+    for (const x of per){
+      if (!x.open) continue;
+      const d = ((mins(x.open) - nowW) % W + W) % W;
+      if (d > 0 && (!best || d < best.d)) best = {d, t:x.open};
+    }
+    if (!best) return {open:false, text:"Zatvorené", sub:""};
+    const dayDiff = (best.t.day - now.getUTCDay() + 7) % 7;
+    const when = dayDiff === 0 && best.d < 1440 ? "" : dayDiff === 1 ? "zajtra " : `${DAY_IN[best.t.day]} `;
+    return {open:false, text:"Zatvorené", sub:`otvára ${when}o ${hhmm(best.t.hour||0, best.t.minute||0)}`};
+  }
+  return null;
+}
+/* ---------- Automatický popis z vlastností podniku (údaje z Google Máp, bez AI) ---------- */
+function joinSk(arr, last = "a"){
+  if (arr.length <= 1) return arr.join("");
+  return arr.slice(0, -1).join(", ") + ` ${last} ` + arr[arr.length - 1];
+}
+function autoDescription(p){
+  let facts = 0;
+  const out = [];
+  const type = p.primaryTypeDisplayName?.text || "Podnik";
+  const space = [];
+  if (p.outdoorSeating) space.push("terasou");
+  if (p.liveMusic) space.push("živou hudbou");
+  facts += space.length;
+  out.push(space.length ? `${type} s ${joinSk(space)}.` : null);
+
+  const meals = [];
+  if (p.servesBreakfast) meals.push("raňajky");
+  if (p.servesBrunch) meals.push("brunch");
+  if (p.servesLunch) meals.push("obedy");
+  if (p.servesDinner) meals.push("večere");
+  facts += meals.length;
+  if (meals.length) out.push(`Podáva ${joinSk(meals, meals.length > 1 ? "aj" : "a")}.`);
+
+  const menu = [];
+  if (p.servesVegetarianFood) menu.push("vegetariánske jedlá");
+  if (p.servesDessert) menu.push("dezerty");
+  if (p.servesCoffee) menu.push("kávu");
+  if (p.servesBeer) menu.push("pivo");
+  if (p.servesWine) menu.push("víno");
+  if (p.servesCocktails) menu.push("koktaily");
+  facts += menu.length;
+  if (menu.length) out.push(`V ponuke má ${joinSk(menu)}.`);
+
+  const fit = [];
+  if (p.goodForChildren) fit.push("pre deti");
+  if (p.goodForGroups) fit.push("pre väčšie skupiny");
+  if (p.goodForWatchingSports) fit.push("na sledovanie športu");
+  facts += fit.length;
+  if (fit.length) out.push(`Hodí sa ${joinSk(fit)}.`);
+  if (p.menuForChildren){ out.push("Má detské menu."); facts++; }
+  if (p.allowsDogs){ out.push("Psy sú vítané."); facts++; }
+  if (p.accessibilityOptions?.wheelchairAccessibleEntrance){ out.push("Má bezbariérový vstup."); facts++; }
+
+  const serv = [];
+  if (p.reservable) serv.push("rezerváciu");
+  if (p.takeout) serv.push("jedlo so sebou");
+  if (p.delivery) serv.push("rozvoz");
+  facts += serv.length;
+  if (serv.length) out.push(`Ponúka ${joinSk(serv)}.`);
+
+  const pk = p.parkingOptions || {};
+  if (pk.freeParkingLot || pk.freeStreetParking || pk.freeGarageParking){ out.push("Parkovanie zadarmo v blízkosti."); facts++; }
+  else if (pk.paidParkingLot || pk.paidStreetParking || pk.paidGarageParking || pk.valetParking){ out.push("Platené parkovanie v blízkosti."); facts++; }
+
+  if (facts < 2) return "";
+  if (!out[0]) out[0] = `${type}.`;
+  return out.filter(Boolean).join(" ");
+}
+function bestReview(p){
+  const list = (p.reviews || []).filter(r => (r.text?.text || "").trim().length >= 25);
+  return list[0] || null; // Google ich radí od najrelevantnejšej
+}
+function reviewHtml(p){
+  const r = bestReview(p); if (!r) return "";
+  let t = r.text.text.trim().replace(/\s+/g, " ");
+  const long = t.length > 240;
+  if (long) t = t.slice(0, 230).replace(/\s+\S*$/, "") + "…";
+  const a = r.authorAttribution || {};
+  const name = a.displayName || "Návštevník";
+  const stars = Math.max(0, Math.min(5, Math.round(r.rating || 0)));
+  return `<figure class="review">
+    <div class="rv-stars" aria-label="${stars} z 5 hviezdičiek">${"★".repeat(stars)}<span>${"★".repeat(5 - stars)}</span></div>
+    <blockquote>${esc(t)}</blockquote>
+    <figcaption>${a.uri ? `<a href="${esc(a.uri)}" target="_blank" rel="noopener">${esc(name)}</a>` : esc(name)}${r.relativePublishTimeDescription ? `, ${esc(r.relativePublishTimeDescription)}` : ""}${long ? ` · <button type="button" class="linklike" data-detail="${esc(p.id)}">celá recenzia v Mapách</button>` : ""}</figcaption>
+  </figure>`;
+}
 function moreInfo(p){
-  const d = p.editorialSummary?.text;
-  let html = d ? `<p class="desc">${esc(d)}</p>`
-               : `<p class="desc none">Google k tomuto podniku nemá krátky popis. Recenzie a fotky nájdeš cez V Mapách.</p>`;
+  let html = "";
+  const desc = autoDescription(p);
+  if (desc) html += `<p class="auto-desc">${esc(desc)}</p>`;
+  const st = openStatus(p);
+  const days = p.currentOpeningHours?.weekdayDescriptions;
+  if (st || (days && days.length === 7)){
+    html += `<div class="oh">`;
+    if (st) html += `<div class="oh-status ${st.open ? "is-open" : "is-closed"}"><span class="oh-dot"></span>${st.text}${st.sub ? `<span class="oh-sub">${esc(st.sub)}</span>` : ""}</div>`;
+    if (days && days.length === 7){
+      const idx = (placeNow(p).getUTCDay() + 6) % 7; // Google začína pondelkom
+      html += `<div class="oh-table">` + days.map((t, i) => {
+        const hours = t.replace(/^[^:]+:\s*/, "");
+        const closed = /zatvoren/i.test(hours);
+        const parts = hours.split(/,\s*/).map(esc).join("<br>");
+        return `<div class="oh-row${i === idx ? " today" : ""}"><span class="oh-day">${DAY_NAMES[i]}${i === idx ? `<span class="oh-today">dnes</span>` : ""}</span><span class="oh-time${closed ? " closed" : ""}">${parts}</span></div>`;
+      }).join("") + `</div>`;
+    }
+    html += `</div>`;
+  }
   const tel = p.internationalPhoneNumber || p.nationalPhoneNumber;
   const web = p.websiteUri && /^https?:\/\//i.test(p.websiteUri) ? p.websiteUri : null;
   if (tel || web){
@@ -556,14 +711,8 @@ function moreInfo(p){
       ${web ? `<a class="btn" href="${esc(web)}" target="_blank" rel="noopener">Web podniku<span class="sub">${esc(web.replace(/^https?:\/\/(www\.)?/i, "").replace(/\/.*$/, ""))}</span></a>` : ""}
     </div>`;
   }
-  const days = p.currentOpeningHours?.weekdayDescriptions;
-  if (days && days.length === 7){
-    const idx = (new Date().getDay() + 6) % 7; // Google začína pondelkom
-    const today = days[idx].replace(/^[^:]+:\s*/, "");
-    html += `<p class="hours"><strong>Dnes:</strong> ${esc(today)}</p>
-      <details class="week"><summary>Hodiny na celý týždeň</summary>
-      <ul>${days.map((t,i) => `<li${i === idx ? ' class="today"' : ""}>${esc(t)}</li>`).join("")}</ul></details>`;
-  }
+  html += reviewHtml(p);
+  if (!html) html = `<p class="none">Podrobnosti Google pri tomto podniku nemá. Viac nájdeš cez V Mapách.</p>`;
   return html;
 }
 function payOf(p){
@@ -742,7 +891,7 @@ function renderResults(){
         ${r ? `<span class="cnt">${nf0.format(p.userRatingCount||0)} hodn.</span>` : ""}
         ${priceBlock(p)}</div>
       <div>
-        <h3><button type="button" class="name-btn" data-toggle="${esc(p.id)}" aria-expanded="${expanded.has(p.id)}">${esc(p.displayName?.text)}<span class="chev" aria-hidden="true"></span></button></h3>
+        <h3><button type="button" class="name-btn" data-toggle="${esc(p.id)}" aria-expanded="${expanded.has(p.id)}"><span class="chev" aria-hidden="true"></span>${esc(p.displayName?.text)}</button></h3>
         ${metaParts.length ? `<p class="meta">${esc(metaParts.join(", "))}</p>` : ""}
         <p class="addr">${esc(p.formattedAddress)}</p>
         <div class="tags">${payTag(p)}
@@ -858,7 +1007,7 @@ async function callPlaces(body, key){
       "X-Goog-FieldMask":[...BASE_FIELDS, ...OPTIONAL_FIELDS, "nextPageToken"].join(",")},
     body:JSON.stringify(body)
   });
-  for (let attempt = 0; attempt < 4; attempt++){
+  for (let attempt = 0; attempt < 12; attempt++){
     const res = await tryOnce();
     const data = await res.json().catch(() => ({}));
     if (res.ok) return data;

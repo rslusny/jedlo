@@ -64,7 +64,7 @@ h1{font:800 clamp(34px,10vw,46px)/0.95 var(--display);letter-spacing:-0.02em;mar
 .seg button[aria-pressed="true"]{background:var(--green);color:#fff}
 
 .field{margin-top:12px}
-.tabs{display:flex;gap:18px;margin:20px 0 10px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs{display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;margin:20px 0 10px;border-bottom:1px solid var(--line)}
 .tabs::-webkit-scrollbar{display:none}
 .tab{border:0;background:none;padding:8px 0 10px;font-weight:600;color:var(--muted);white-space:nowrap;
   border-bottom:3px solid transparent;margin-bottom:-1px}
@@ -224,7 +224,7 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
   <div class="dlg">
     <h2>Nastavenia</h2>
     <p><strong>Google kľúč</strong></p>
-    <p class="note">Kľúč sa uloží len v tomto zariadení. Do kódu appky ani nikam inam sa neposiela, používa sa iba pri vyhľadávaní v Google.</p>
+    <p class="note">Kľúč sa uloží len v tomto zariadení. Do kódu appky ani nikam inam sa neposiela, používa sa iba pri vyhľadávaní cez Google.</p>
     <input id="keyInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Vlož kľúč začínajúci AIza…">
     <div class="row">
       <button class="btn primary" id="btnSaveKey" type="button">Uložiť kľúč</button>
@@ -234,11 +234,11 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
     <p class="note" id="keyState"></p>
 
     <label class="toggle"><input type="checkbox" id="optGmApp"> Otvárať priamo v appke Google Mapy</label>
-    <p class="note">Ak appku Google Mapy nemáš, vypni to a otvorí sa webová verzia.</p>
+    <p class="note">Ak appku Google Mapy nemáš, vypni túto možnosť a otvorí sa webová verzia.</p>
 
     <p style="margin-top:18px"><strong>Vyhľadávania tento mesiac</strong></p>
     <p class="usage" id="usageBig"></p>
-    <p class="note">Google dáva 1 000 vyhľadávaní mesačne zadarmo. Appka spustí najviac toľko, koľko je nastavený limit pre tento telefón, a potom do konca mesiaca prestane hľadať. Mesiac sa obnoví 1. deň približne o 9:00 ráno, rovnako ako u Google. Každé „Načítať ďalších 20“ je tiež jedno vyhľadávanie. Rovnaké hľadanie zopakované počas jedného spustenia appky sa nepočíta.</p>
+    <p class="note">Google dáva 1 000 vyhľadávaní mesačne zadarmo. Appka spustí najviac toľko, koľko je nastavený limit pre tento telefón, a potom do konca mesiaca prestane hľadať. Počítadlo sa vynuluje 1. dňa v mesiaci približne o 9:00 ráno, rovnako ako u Google. Každé „Načítať ďalších 20“ je tiež jedno vyhľadávanie. Rovnaké hľadanie zopakované počas jedného spustenia appky sa nepočíta.</p>
     <p style="margin-top:18px"><strong>Limit pre tento telefón</strong></p>
     <p class="note">Ak appku s tým istým kľúčom používa viac telefónov, súčet ich limitov nesmie byť vyšší ako 900. Pri dvoch telefónoch nastav napríklad 450 a 450.</p>
     <div class="row">
@@ -315,7 +315,20 @@ const GROUPS = [
     {id:"halusky", label:"Halušky", q:"bryndzové halušky"},
     {id:"wings", label:"Krídelká", q:"chicken wings"},
     {id:"pasta", label:"Cestoviny", q:"fresh pasta"},
-    {id:"dumplings", label:"Knedličky dim sum", q:"dumplings dim sum"}
+    {id:"dumplings", label:"Dim sum", q:"dumplings dim sum"}
+  ]},
+  {id:"fastfood", label:"Rýchle občerstvenie", items:[
+    {id:"ff-all", label:"Všetky", q:"fast food"},
+    {id:"mcd", label:"McDonald's", q:"McDonald's", brand:"mcdonald"},
+    {id:"kfc", label:"KFC", q:"KFC", brand:"kfc"},
+    {id:"bk", label:"Burger King", q:"Burger King", brand:"burger king"},
+    {id:"subway", label:"Subway", q:"Subway restaurant", brand:"subway"},
+    {id:"dominos", label:"Domino's", q:"Domino's Pizza", brand:"domino"},
+    {id:"pizzahut", label:"Pizza Hut", q:"Pizza Hut", brand:"pizza hut"},
+    {id:"fiveguys", label:"Five Guys", q:"Five Guys", brand:"five guys"},
+    {id:"popeyes", label:"Popeyes", q:"Popeyes", brand:"popeyes"},
+    {id:"tacobell", label:"Taco Bell", q:"Taco Bell", brand:"taco bell"},
+    {id:"bageterie", label:"Bageterie Boulevard", q:"Bageterie Boulevard", brand:"bageterie"}
   ]},
   {id:"sladke", label:"Kaviarne a sladké", items:[
     {id:"cafe", label:"Kaviareň", q:"cafe"},
@@ -449,7 +462,7 @@ function openMaps(url){
 }
 
 /* ---------- Stav ---------- */
-let results = [], nextToken = null, lastBody = null, center = null, searching = false;
+let results = [], nextToken = null, lastBody = null, lastBrand = null, center = null, searching = false;
 const cache = new Map();
 const compare = new Set();
 
@@ -507,7 +520,7 @@ function renderControls(){
   let n = 0;
   if (prefs.minRating) n++; if (prefs.prices.length) n++; if (prefs.pay !== "any") n++;
   if (prefs.openNow) n++; if (prefs.hideUnknown) n++;
-  $("#filtersSummary").textContent = n ? `Filtre a zoradenie (${n} aktívne)` : "Filtre a zoradenie";
+  $("#filtersSummary").textContent = n ? `Filtre a zoradenie (aktívne: ${n})` : "Filtre a zoradenie";
 }
 
 /* ---------- Filtrovanie a zoradenie ---------- */
@@ -617,7 +630,7 @@ function renderCompare(){
     ["Počet hodnotení", ps.map(p => nf0.format(p.userRatingCount || 0)), best(ps.map(p => p.userRatingCount ?? null), "max")],
     ["Cena", ps.map(p => priceText(p) || "neuvedená"), best(ps.map(priceIdx), "min")],
     ["Platba", ps.map(p => ({card:"Berú kartu", cash:"Len hotovosť", unknown:"Neuvedená"})[payOf(p)]), ps.map(() => false)],
-    ["Teraz", ps.map(p => p.currentOpeningHours?.openNow === true ? "Otvorené" : p.currentOpeningHours?.openNow === false ? "Zatvorené" : "–"), ps.map(() => false)],
+    ["Teraz otvorené", ps.map(p => p.currentOpeningHours?.openNow === true ? "Áno" : p.currentOpeningHours?.openNow === false ? "Nie" : "–"), ps.map(() => false)],
     ["Vzdialenosť", ps.map(p => p._dist != null ? fmtDist(p._dist) : "–"), best(ps.map(p => p._dist ?? null), "min")],
     ["Typ", ps.map(p => p.primaryTypeDisplayName?.text || "–"), ps.map(() => false)],
     ["Adresa", ps.map(p => p.formattedAddress || "–"), ps.map(() => false)]
@@ -653,7 +666,7 @@ function rectAround(c, r){
 /* ---------- Chybové hlásenia ---------- */
 function explainError(status, msg){
   const m = (msg || "").toLowerCase();
-  if (m.includes("api key not valid") || m.includes("api_key_invalid")) return "Kľúč nie je platný. Skontroluj ho v Nastaveniach (ozubené koliesko).";
+  if (m.includes("api key not valid") || m.includes("api_key_invalid")) return "Kľúč nie je platný. Skontroluj ho v nastaveniach (ozubené koliesko vpravo hore).";
   if (m.includes("referer") || m.includes("referrer")) return "Kľúč je obmedzený na inú webovú adresu. V Google Cloud skontroluj obmedzenie Websites pri kľúči.";
   if (m.includes("billing")) return "Google vyhľadávanie zastavil, lebo projekt nemá aktívne fakturovanie (napríklad skončila skúšobná verzia). Nič sa ti neúčtuje, appka len nebude hľadať.";
   if (m.includes("has not been used") || m.includes("is disabled") || m.includes("service_disabled")) return "V Google Cloud nie je zapnutá služba Places API (New). Zapni ju a skús to o pár minút znova.";
@@ -685,7 +698,7 @@ async function callPlaces(body, key){
 async function search(more = false){
   if (searching) return;
   const key = getKey();
-  if (!key){ openSettings(); setStatus("Najprv vlož svoj Google kľúč v Nastaveniach.", true); return; }
+  if (!key){ openSettings(); setStatus("Najprv vlož svoj Google kľúč v nastaveniach.", true); return; }
 
   let body;
   if (more){
@@ -705,8 +718,8 @@ async function search(more = false){
       try { center = await getPosition(); }
       catch (err){
         setStatus(err && err.code === 1
-          ? "Appka nemá povolenú polohu. Povoľ ju, keď sa iPhone opýta (alebo v Nastavenia → Súkromie → Polohové služby), prípadne prepni na V meste."
-          : "Polohu sa nepodarilo zistiť. Skús to znova vonku alebo prepni na V meste.", true);
+          ? "Appka nemá povolenú polohu. Povoľ ju, keď sa iPhone opýta, alebo v Nastaveniach → Súkromie a bezpečnosť → Polohové služby. Prípadne prepni na režim V meste."
+          : "Polohu sa nepodarilo zistiť. Skús to znova vonku alebo prepni na režim V meste.", true);
         return;
       }
       body.locationRestriction = {rectangle:rectAround(center, prefs.radius)};
@@ -717,7 +730,7 @@ async function search(more = false){
   let data = cache.get(cacheKey);
   if (!data){
     const u = usage();
-    if (u.monthCount >= LIMIT()){ setStatus(`Limit ${LIMIT()} vyhľadávaní pre tento telefón je na tento mesiac vyčerpaný. Obnoví sa 1. deň v mesiaci približne o 9:00. Filtre na už nájdené podniky fungujú ďalej.`, true); return; }
+    if (u.monthCount >= LIMIT()){ setStatus(`Limit ${LIMIT()} vyhľadávaní pre tento telefón je na tento mesiac vyčerpaný. Obnoví sa 1. dňa v mesiaci približne o 9:00. Filtre na už nájdené podniky fungujú ďalej.`, true); return; }
     searching = true; $("#btnSearch").disabled = true; $("#btnMore").disabled = true;
     setStatus("Hľadám…");
     try {
@@ -725,7 +738,7 @@ async function search(more = false){
       addUsage();
       cache.set(cacheKey, data);
     } catch (err){
-      setStatus(err.handled ? err.message : "Nepodarilo sa spojiť s Google. Skontroluj pripojenie na internet.", true);
+      setStatus(err.handled ? err.message : "Nepodarilo sa spojiť so službou Google. Skontroluj pripojenie na internet.", true);
       return;
     } finally {
       searching = false; $("#btnSearch").disabled = false; $("#btnMore").disabled = false;
@@ -733,16 +746,24 @@ async function search(more = false){
   }
 
   let places = data.places || [];
+  const sel = CUISINES.find(x => x.id === prefs.cuisine);
+  if (sel && sel.brand && !more){
+    const norm = t => (t || "").toLowerCase().replace(/[’'`]/g, "");
+    places = places.filter(p => norm(p.displayName?.text).includes(norm(sel.brand)));
+  } else if (more && lastBrand){
+    const norm = t => (t || "").toLowerCase().replace(/[’'`]/g, "");
+    places = places.filter(p => norm(p.displayName?.text).includes(norm(lastBrand)));
+  }
   if (center){
     places.forEach(p => { if (p.location) p._dist = haversine(center, p.location); });
     places = places.filter(p => p._dist == null || p._dist <= prefs.radius * 1.05);
   }
-  if (!more){ results = []; compare.clear(); lastBody = body; }
+  if (!more){ results = []; compare.clear(); lastBody = body; lastBrand = sel?.brand || null; }
   const seen = new Set(results.map(p => p.id));
   for (const p of places) if (!seen.has(p.id)) results.push(p);
   nextToken = data.nextPageToken || null;
 
-  if (!results.length) setStatus("Nič sa nenašlo. Skús inú kuchyňu, väčší okruh alebo iné mesto.");
+  if (!results.length) setStatus((sel && sel.brand ? `V tejto oblasti sa nenašla žiadna pobočka ${sel.label}. Skús väčší okruh alebo iné mesto.` : "Nič sa nenašlo. Skús inú kategóriu, väčší okruh alebo iné mesto."));
   else setStatus(`Nájdené podniky: ${results.length}${nextToken ? ". Ďalšie môžeš načítať dole." : "."}`);
   if (prefs.sort === "near" && !center){ prefs.sort = "best"; savePrefs(); renderControls(); }
   renderResults();
@@ -789,10 +810,10 @@ $("#sort").addEventListener("change", e => { prefs.sort = e.target.value; savePr
 /* ---------- Štart ---------- */
 renderControls(); renderUsage();
 if (!getKey()){
-  setStatus("Na začiatok vlož svoj Google kľúč. Otvoríš ho cez ozubené koliesko vpravo hore.");
+  setStatus("Na začiatok vlož svoj Google kľúč. Nastavenia otvoríš cez ozubené koliesko vpravo hore.");
   openSettings();
 } else {
-  setStatus("Vyber okolie alebo mesto, kuchyňu a ťukni na Hľadať.");
+  setStatus("Vyber okolie alebo mesto, čo chceš jesť, a ťukni na Hľadať.");
 }
 })();
 </script>

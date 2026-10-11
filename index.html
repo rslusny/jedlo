@@ -64,6 +64,12 @@ h1{font:800 clamp(34px,10vw,46px)/0.95 var(--display);letter-spacing:-0.02em;mar
 .seg button[aria-pressed="true"]{background:var(--green);color:#fff}
 
 .field{margin-top:12px}
+.tabs{display:flex;gap:18px;margin:20px 0 10px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:none;padding:8px 0 10px;font-weight:600;color:var(--muted);white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--mustard)}
+.tab.has-sel:not([aria-selected="true"])::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mustard);margin-left:6px;vertical-align:middle}
 .field-label{font-size:14px;color:var(--muted);margin:16px 0 8px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips.scroll{flex-wrap:nowrap;overflow-x:auto;margin:0 -18px;padding:2px 18px 6px;scrollbar-width:none}
@@ -90,12 +96,20 @@ details.filters[open] summary::after{content:"−"}
 #status.err{color:var(--tomato)}
 
 ol.results{list-style:none;margin:0;padding:0}
-.place{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.place{display:grid;grid-template-columns:84px 1fr;gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
 .score{text-align:center}
 .score .num{display:block;font:800 30px/1 var(--display);letter-spacing:-0.02em}
 .score .cnt{display:block;font-size:12px;color:var(--muted);margin-top:4px}
 .score.hi .num{color:var(--ok)} .score.mid .num{color:var(--mustard)} .score.low .num{color:var(--tomato)}
 .score.none .num{color:var(--muted);font-size:20px;padding-top:6px}
+.price{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.price .dots{display:flex;justify-content:center;gap:3px}
+.price .dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--mustard)}
+.price .dot.on{background:var(--mustard)}
+.price .plab{display:block;font-size:12px;font-weight:600;margin-top:4px}
+.price .prng{display:block;font:700 15px/1.15 var(--display);margin-top:4px;white-space:nowrap}
+.price .pper{display:block;font-size:11px;color:var(--muted)}
+.price .unk{display:block;font-size:11px;color:var(--muted)}
 .place h3{font:700 19px/1.2 var(--display);margin:0 0 4px}
 .meta{margin:0;font-size:15px}
 .addr{margin:2px 0 0;font-size:14px;color:var(--muted)}
@@ -160,7 +174,7 @@ table.cmp-table{border-collapse:collapse;width:100%;font-size:14px}
     <div id="cityOpts" class="field" hidden>
       <input id="city" type="text" placeholder="Napr. Brno, Bratislava, Košice" autocomplete="address-level2" enterkeyhint="search">
     </div>
-    <p class="field-label">Kuchyňa</p>
+    <div class="tabs" id="groups" role="tablist"></div>
     <div class="chips scroll" id="cuisines"></div>
     <button id="btnSearch" class="search-btn" type="button">Hľadať</button>
   </section>
@@ -261,28 +275,55 @@ const BASE_FIELDS = ["places.id","places.displayName","places.formattedAddress",
   "places.googleMapsUri","places.businessStatus"];
 let OPTIONAL_FIELDS = ["places.priceRange","places.primaryTypeDisplayName","places.currentOpeningHours"];
 
-const CUISINES = [
-  {id:"all", label:"Všetko", q:"restaurant"},
-  {id:"sk", label:"Slovenská", q:"slovak restaurant"},
-  {id:"cz", label:"Česká", q:"czech restaurant"},
-  {id:"it", label:"Talianska", q:"italian restaurant"},
-  {id:"pizza", label:"Pizza", q:"pizza"},
-  {id:"burger", label:"Burgre", q:"burger restaurant"},
-  {id:"asia", label:"Ázijská", q:"asian restaurant"},
-  {id:"sushi", label:"Sushi", q:"sushi"},
-  {id:"viet", label:"Vietnamská", q:"vietnamese restaurant"},
-  {id:"cn", label:"Čínska", q:"chinese restaurant"},
-  {id:"thai", label:"Thajská", q:"thai restaurant"},
-  {id:"in", label:"Indická", q:"indian restaurant"},
-  {id:"mx", label:"Mexická", q:"mexican restaurant"},
-  {id:"gr", label:"Grécka", q:"greek restaurant"},
-  {id:"kebab", label:"Kebab", q:"kebab"},
-  {id:"steak", label:"Steaky", q:"steakhouse"},
-  {id:"fish", label:"Ryby", q:"seafood restaurant"},
-  {id:"veg", label:"Vegetariánska", q:"vegetarian vegan restaurant"},
-  {id:"brunch", label:"Raňajky", q:"breakfast brunch"},
-  {id:"cafe", label:"Kaviareň", q:"cafe"}
+const GROUPS = [
+  {id:"kuchyna", label:"Kuchyňa", items:[
+    {id:"all", label:"Všetko", q:"restaurant"},
+    {id:"sk", label:"Slovenská", q:"slovak restaurant"},
+    {id:"cz", label:"Česká", q:"czech restaurant"},
+    {id:"it", label:"Talianska", q:"italian restaurant"},
+    {id:"fr", label:"Francúzska", q:"french restaurant"},
+    {id:"gr", label:"Grécka", q:"greek restaurant"},
+    {id:"tr", label:"Turecká", q:"turkish restaurant"},
+    {id:"asia", label:"Ázijská", q:"asian restaurant"},
+    {id:"viet", label:"Vietnamská", q:"vietnamese restaurant"},
+    {id:"cn", label:"Čínska", q:"chinese restaurant"},
+    {id:"jp", label:"Japonská", q:"japanese restaurant"},
+    {id:"kr", label:"Kórejská", q:"korean restaurant"},
+    {id:"thai", label:"Thajská", q:"thai restaurant"},
+    {id:"in", label:"Indická", q:"indian restaurant"},
+    {id:"mx", label:"Mexická", q:"mexican restaurant"},
+    {id:"us", label:"Americká", q:"american restaurant"},
+    {id:"fish", label:"Ryby a morské plody", q:"seafood restaurant"},
+    {id:"veg", label:"Vegetariánska a vegánska", q:"vegetarian vegan restaurant"}
+  ]},
+  {id:"jedla", label:"Jedlá", items:[
+    {id:"pizza", label:"Pizza", q:"pizza"},
+    {id:"pizza-nea", label:"Neapolská pizza", q:"neapolitan pizza"},
+    {id:"burger", label:"Burger", q:"burger"},
+    {id:"kebab", label:"Kebab", q:"kebab"},
+    {id:"gyros", label:"Gyros", q:"gyros"},
+    {id:"sushi", label:"Sushi", q:"sushi"},
+    {id:"ramen", label:"Ramen", q:"ramen"},
+    {id:"pho", label:"Pho", q:"pho"},
+    {id:"poke", label:"Poke", q:"poke bowl"},
+    {id:"tacos", label:"Tacos a burrito", q:"tacos burrito"},
+    {id:"steak", label:"Steak", q:"steakhouse"},
+    {id:"schnitzel", label:"Rezeň", q:"schnitzel"},
+    {id:"halusky", label:"Halušky", q:"bryndzové halušky"},
+    {id:"wings", label:"Krídelká", q:"chicken wings"},
+    {id:"pasta", label:"Cestoviny", q:"fresh pasta"},
+    {id:"dumplings", label:"Knedličky dim sum", q:"dumplings dim sum"}
+  ]},
+  {id:"sladke", label:"Kaviarne a sladké", items:[
+    {id:"cafe", label:"Kaviareň", q:"cafe"},
+    {id:"cukraren", label:"Cukráreň", q:"pastry shop cukrárna"},
+    {id:"pekaren", label:"Pekáreň", q:"bakery"},
+    {id:"zmrzlina", label:"Zmrzlina", q:"ice cream gelato"},
+    {id:"brunch", label:"Raňajky a brunch", q:"breakfast brunch"},
+    {id:"caj", label:"Čajovňa", q:"tea house"}
+  ]}
 ];
+const CUISINES = GROUPS.flatMap(g => g.items.map(i => ({...i, group:g.id})));
 const RADII = [1000, 3000, 5000, 10000];
 const RATINGS = [{v:0,l:"Všetky"},{v:3.5,l:"3,5+"},{v:4,l:"4,0+"},{v:4.5,l:"4,5+"}];
 const PRICE_IDX = {PRICE_LEVEL_FREE:0, PRICE_LEVEL_INEXPENSIVE:1, PRICE_LEVEL_MODERATE:2, PRICE_LEVEL_EXPENSIVE:3, PRICE_LEVEL_VERY_EXPENSIVE:4};
@@ -296,7 +337,7 @@ const store = {
   del(k){ try { localStorage.removeItem(k); } catch {} }
 };
 const prefs = Object.assign({
-  mode:"near", radius:3000, city:"", cuisine:"all",
+  mode:"near", radius:3000, city:"", cuisine:"all", group:"kuchyna",
   minRating:0, prices:[], pay:"any", openNow:false, hideUnknown:false, sort:"best", gmApp:true, monthLimit:900
 }, store.get("kj_prefs", {}));
 const savePrefs = () => store.set("kj_prefs", prefs);
@@ -357,6 +398,22 @@ function priceText(p){
   if (r && r.startPrice) parts.push(rangeText(r));
   return parts.join(", ");
 }
+function priceBlock(p){
+  const i = priceIdx(p), r = p.priceRange;
+  if (i === null && !(r && r.startPrice)) return `<div class="price"><span class="unk">cena neuvedená</span></div>`;
+  let html = `<div class="price">`;
+  if (i !== null && i > 0){
+    html += `<span class="dots" aria-hidden="true">${[1,2,3,4].map(n => `<span class="dot${n <= i ? " on" : ""}"></span>`).join("")}</span>`;
+    html += `<span class="plab">${PRICE_NAMES[i]}</span>`;
+  } else if (i === 0) html += `<span class="plab">${PRICE_NAMES[0]}</span>`;
+  if (r && r.startPrice){
+    const cur = CUR[r.startPrice.currencyCode] || r.startPrice.currencyCode;
+    const a = nf0.format(Number(r.startPrice.units||0));
+    const b = r.endPrice ? nf0.format(Number(r.endPrice.units||0)) : null;
+    html += `<span class="prng">${b ? `${a}–${b}` : `od ${a}`}</span><span class="pper">${esc(cur)} na osobu</span>`;
+  }
+  return html + `</div>`;
+}
 function payOf(p){
   const o = p.paymentOptions;
   if (!o) return "unknown";
@@ -410,8 +467,22 @@ function renderControls(){
   const radii = $("#radii"); radii.replaceChildren();
   RADII.forEach(r => radii.append(chip(`${r/1000} km`, prefs.radius === r, () => { prefs.radius = r; savePrefs(); renderControls(); })));
 
+  if (!GROUPS.some(g => g.id === prefs.group)) prefs.group = "kuchyna";
+  if (!CUISINES.some(c => c.id === prefs.cuisine)) prefs.cuisine = "all";
+  const gr = $("#groups"); gr.replaceChildren();
+  GROUPS.forEach(g => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "tab"; b.setAttribute("role","tab");
+    const hasSel = g.items.some(i => i.id === prefs.cuisine);
+    b.textContent = g.label;
+    b.setAttribute("aria-selected", prefs.group === g.id ? "true" : "false");
+    if (hasSel) b.classList.add("has-sel");
+    b.addEventListener("click", () => { prefs.group = g.id; savePrefs(); renderControls(); });
+    gr.append(b);
+  });
   const cu = $("#cuisines"); cu.replaceChildren();
-  CUISINES.forEach(c => cu.append(chip(c.label, prefs.cuisine === c.id, () => { prefs.cuisine = c.id; savePrefs(); renderControls(); })));
+  const group = GROUPS.find(g => g.id === prefs.group);
+  group.items.forEach(c => cu.append(chip(c.label, prefs.cuisine === c.id, () => { prefs.cuisine = c.id; savePrefs(); renderControls(); })));
 
   const fr = $("#fRating"); fr.replaceChildren();
   RATINGS.forEach(r => fr.append(chip(r.l, prefs.minRating === r.v, () => { prefs.minRating = r.v; savePrefs(); renderControls(); renderResults(); })));
@@ -480,13 +551,14 @@ function renderResults(){
   }
   for (const p of list){
     const r = p.rating, cls = !r ? "none" : r >= 4.5 ? "hi" : r >= 4 ? "good" : r >= 3.5 ? "mid" : "low";
-    const metaParts = [p.primaryTypeDisplayName?.text, priceText(p), p._dist != null ? fmtDist(p._dist) : null].filter(Boolean);
+    const metaParts = [p.primaryTypeDisplayName?.text, p._dist != null ? fmtDist(p._dist) : null].filter(Boolean);
     const open = p.currentOpeningHours?.openNow;
     const li = document.createElement("li");
     li.className = "place";
     li.innerHTML = `
       <div class="score ${cls}"><span class="num">${r ? nf1.format(r) : "bez<br>hodn."}</span>
-        ${r ? `<span class="cnt">${nf0.format(p.userRatingCount||0)} hodn.</span>` : ""}</div>
+        ${r ? `<span class="cnt">${nf0.format(p.userRatingCount||0)} hodn.</span>` : ""}
+        ${priceBlock(p)}</div>
       <div>
         <h3>${esc(p.displayName?.text)}</h3>
         ${metaParts.length ? `<p class="meta">${esc(metaParts.join(", "))}</p>` : ""}
